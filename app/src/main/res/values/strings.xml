@@ -13,4 +13,14 @@
     <string name="nav_lunch">YOUR LUNCH</string>
     <string name="nav_settings">SETTINGS</string>
     <string name="nav_logout">LOGOUT</string>
+
+    <string name="login">CONNEXION</string>
+
+    <string name="connection_succeed">Authentification réussie</string>
+    <string name="error_authentication_canceled">Authentification annulée</string>
+    <string name="error_no_internet">Erreur : pas de connexion internet</string>
+    <string name="error_unknown_error">Erreur inconnue</string>
+
 </resources>
+
+

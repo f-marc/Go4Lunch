@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "475372225858",
+    "firebase_url": "https://go4lunch-819ec.firebaseio.com",
+    "project_id": "go4lunch-819ec",
+    "storage_bucket": "go4lunch-819ec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:475372225858:android:890d17cd3977c813",
+        "android_client_info": {
+          "package_name": "com.fleury.marc.go4lunch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "475372225858-t4pm320udjhs6dd1b5l7sgi00gn1felp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDF7cUyFPofTRe9XgoSdqToSK-ypu1aU40"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
