@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) { // SUCCESS
                 showSnackBar(this.coordinatorLayout, getString(R.string.connection_succeed));
-            } else { // ERRORS
+            } /*else { // ERRORS
                 if (response == null) {
                     showSnackBar(this.coordinatorLayout, getString(R.string.error_authentication_canceled));
                 } else if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                 } else if (response.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
                     showSnackBar(this.coordinatorLayout, getString(R.string.error_unknown_error));
                 }
-            }
+            }*/
         }
     }
 
@@ -88,8 +88,8 @@ public class LoginActivity extends AppCompatActivity {
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setTheme(R.style.LoginTheme)
-                        .setAvailableProviders(
-                                Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build()))
+                        //.setAvailableProviders(
+                        //       Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build()))
                         .setIsSmartLockEnabled(false, true)
                         //.setLogo(R.drawable.ic_logo_auth)
                         .build(),
