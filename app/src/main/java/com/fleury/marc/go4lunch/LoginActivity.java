@@ -2,16 +2,13 @@ package com.fleury.marc.go4lunch;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.material.snackbar.Snackbar;
 
-import java.util.Arrays;
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -20,7 +17,8 @@ public class LoginActivity extends AppCompatActivity {
     //FOR DATA
     //Identifier for Sign-In Activity
     private static final int RC_SIGN_IN = 123;
-    @BindView(R.id.login_activity_coordinator_layout) CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.login_activity_coordinator_layout)
+    CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
