@@ -45,15 +45,14 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-    //-- Butterknife
+    //Butterknife
     implementation 'com.jakewharton:butterknife:10.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
-    //-- Firebase
+    //Firebase
     implementation 'com.google.firebase:firebase-core:16.0.6'
-            //) {
-            //        exclude group: 'com.android.support'
-            //    }
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
+    //Google Map
+    implementation 'com.google.android.gms:play-services-maps:16.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
