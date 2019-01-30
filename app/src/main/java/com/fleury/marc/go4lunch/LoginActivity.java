@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.login_activity_button_login)
     public void onClickLoginButton() {
-        // 3 - Launch Sign-In Activity when user clicked on Login Button
+        //Launch Sign-In Activity when user clicked on Login Button
         this.startSignInActivity();
     }
 
@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
     // UTILS
     // --------------------
 
-    // 3 - Method that handles response after SignIn Activity close
+    //Method that handles response after SignIn Activity close
     private void handleResponseAfterSignIn(int requestCode, int resultCode, Intent data){
 
         IdpResponse response = IdpResponse.fromResultIntent(data);
