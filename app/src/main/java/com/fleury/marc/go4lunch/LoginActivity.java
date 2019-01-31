@@ -2,6 +2,9 @@ package com.fleury.marc.go4lunch;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
@@ -22,10 +25,16 @@ public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
     @BindView(R.id.login_activity_coordinator_layout) CoordinatorLayout coordinatorLayout;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        Button loginButton = findViewById(R.id.login_activity_button_login);
+
+        loginButton.setOnClickListener(v ->
+                this.startSignInActivity());
     }
 
     @Override
@@ -39,11 +48,12 @@ public class LoginActivity extends AppCompatActivity {
     // ACTIONS
     // --------------------
 
-    @OnClick(R.id.login_activity_button_login)
+    /*@OnClick(R.id.login_activity_button_login)
     public void onClickLoginButton() {
         //Launch Sign-In Activity when user clicked on Login Button
         this.startSignInActivity();
-    }
+        //Toast.makeText(getApplicationContext(), "Test clique boutton", Toast.LENGTH_LONG).show();
+    }*/
 
     // --------------------
     // UI
@@ -51,7 +61,8 @@ public class LoginActivity extends AppCompatActivity {
 
     //Show Snack Bar with a message
     private void showSnackBar(CoordinatorLayout coordinatorLayout, String message){
-        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(findViewById(android.R.id.content)
+                , message, Snackbar.LENGTH_SHORT).show();
     }
 
     // --------------------
@@ -90,7 +101,8 @@ public class LoginActivity extends AppCompatActivity {
                         .setTheme(R.style.LoginTheme)
                         .setAvailableProviders(
                                Arrays.asList(
-                                       new AuthUI.IdpConfig.EmailBuilder().build()))
+                                       new AuthUI.IdpConfig.EmailBuilder().build(), //EMAIL
+                                       new AuthUI.IdpConfig.GoogleBuilder().build())) //GOOGLE
                         .setIsSmartLockEnabled(false, true)
                         //.setLogo(R.drawable.ic_logo_auth)
                         .build(),

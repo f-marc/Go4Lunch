@@ -4,6 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.fleury.marc.go4lunch"
+        multiDexEnabled true
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
@@ -49,10 +50,14 @@ dependencies {
     implementation 'com.jakewharton:butterknife:10.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
     //Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.6'
+    implementation 'com.google.firebase:firebase-core:16.0.4'
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
+
     //Google Map
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
+    //Facebook
+    implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

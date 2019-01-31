@@ -1,5 +1,6 @@
 package com.fleury.marc.go4lunch;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,6 +10,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -97,7 +99,10 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), R.string.nav_settings, Toast.LENGTH_LONG).show();
                     break;
                 case R.id.nav_logout:
-                    Toast.makeText(getApplicationContext(), R.string.nav_logout, Toast.LENGTH_LONG).show();
+                    FirebaseAuth.getInstance().signOut();
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
                     break;
                 default:
                     break;
