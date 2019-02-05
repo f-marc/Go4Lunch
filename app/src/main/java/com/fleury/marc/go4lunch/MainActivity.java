@@ -33,8 +33,7 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_map:
-                    //mTextMessage.setText(R.string.title_map);
-                    SupportMapFragment mapFrag = new SupportMapFragment();
+                    MapViewFragment mapFrag = new MapViewFragment();
                     getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, mapFrag).commit();
                     return true;
                 case R.id.navigation_list:
