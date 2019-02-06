@@ -13,12 +13,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapViewFragment extends Fragment /*implements OnMapReadyCallback*/ {
+public class MapViewFragment extends Fragment implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
+    //private GoogleMap mMap;
 
     public static MapViewFragment newInstance() {
         return new MapViewFragment();
@@ -26,24 +27,20 @@ public class MapViewFragment extends Fragment /*implements OnMapReadyCallback*/ 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map_view, container, false);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
         ButterKnife.bind(this, view);
-
-        /*SupportMapFragment mapFragment = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);*/
 
         return view;
     }
 
-    /*@Override
+    @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-    }*/
+        //mMap = googleMap;
+        googleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(48.8534100, 2.3488000)));
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(48.8534100, 2.3488000)));
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(48.8544100, 2.3498000)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+    }
 
 }
