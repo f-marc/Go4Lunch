@@ -16,7 +16,7 @@
 
     <string name="login">CONNEXION</string>
 
-    <string name="connection_succeed">Authentification réussie</string>
+    <!-- SnackBar -->
     <string name="error_authentication_canceled">Authentification annulée</string>
     <string name="error_no_internet">Erreur : pas de connexion internet</string>
     <string name="error_unknown_error">Erreur inconnue</string>
