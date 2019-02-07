@@ -21,9 +21,13 @@
     <string name="error_no_internet">Erreur : pas de connexion internet</string>
     <string name="error_unknown_error">Erreur inconnue</string>
 
-    <!-- FACEBOOK PURPOSE -->
+    <!-- FACEBOOK -->
     <string name="facebook_application_id" translatable="false">283394502353733</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb283394502353733</string>
+
+    <!-- TWITTER -->
+    <string name="twitter_consumer_key" translatable="false">fMjGWNhjR40QaHNGyyfCpTBin</string>
+    <string name="twitter_consumer_secret" translatable="false">jKQOTLwjRDLLI2ZzMswDQKwQsPNdy9fcmFQUuCzsRks0RxXMt8</string>
 
 </resources>
 

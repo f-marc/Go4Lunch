@@ -102,6 +102,7 @@ public class LoginActivity extends AppCompatActivity {
                                Arrays.asList(
                                        new AuthUI.IdpConfig.EmailBuilder().build(), //EMAIL
                                        new AuthUI.IdpConfig.FacebookBuilder().build(), //FACEBOOK
+                                       new AuthUI.IdpConfig.TwitterBuilder().build(), //TWITTER
                                        new AuthUI.IdpConfig.GoogleBuilder().build())) //GOOGLE
                         .setIsSmartLockEnabled(false, true)
                         //.setLogo(R.drawable.ic_logo_auth)
