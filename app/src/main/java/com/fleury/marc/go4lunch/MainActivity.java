@@ -2,12 +2,13 @@ package com.fleury.marc.go4lunch;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,7 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    private TextView mTextMessage;
+    private View headerView;
+    private TextView textMessage;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -37,10 +39,10 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, mapFrag).commit();
                     return true;
                 case R.id.navigation_list:
-                    mTextMessage.setText(R.string.title_list);
+                    textMessage.setText(R.string.title_list);
                     return true;
                 case R.id.navigation_workmates:
-                    mTextMessage.setText(R.string.title_workmates);
+                    textMessage.setText(R.string.title_workmates);
                     return true;
             }
             return false;
@@ -52,9 +54,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextMessage = findViewById(R.id.message);
+        textMessage = findViewById(R.id.message);
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        MapViewFragment mapFrag = new MapViewFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, mapFrag).commit();
 
         configureToolbar();
         configureDrawerLayout();
@@ -87,6 +92,21 @@ public class MainActivity extends AppCompatActivity {
 
     private void configureNavigationView(){
         navigationView = findViewById(R.id.activity_main_nav_view);
+        headerView = navigationView.getHeaderView(0);
+
+        TextView userName = headerView.findViewById(R.id.nav_header_user_name);
+        TextView userMail = headerView.findViewById(R.id.nav_header_user_mail);
+
+        Log.i("UserName", FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        if (FirebaseAuth.getInstance().getCurrentUser().getDisplayName() != null) {
+            userName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        }
+
+        Log.i("UserMail", FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        if (FirebaseAuth.getInstance().getCurrentUser().getEmail() != null) {
+            userMail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        }
+
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
 
@@ -110,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
-
     }
 
     //----------------------
@@ -119,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //3 - Handle actions on menu items
+        //Handle actions on menu items
         switch (item.getItemId()) {
             case R.id.activity_main_search:
                 Toast.makeText(getApplicationContext(), "Search Button", Toast.LENGTH_SHORT).show();
