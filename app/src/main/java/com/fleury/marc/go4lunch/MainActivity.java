@@ -98,13 +98,13 @@ public class MainActivity extends AppCompatActivity {
         TextView userName = headerView.findViewById(R.id.nav_header_user_name);
         TextView userMail = headerView.findViewById(R.id.nav_header_user_mail);
 
-        Log.i("UserName", FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         if (FirebaseAuth.getInstance().getCurrentUser().getDisplayName() != null) {
+            Log.i("UserName", FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
             userName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         }
 
-        Log.i("UserMail", FirebaseAuth.getInstance().getCurrentUser().getEmail());
         if (FirebaseAuth.getInstance().getCurrentUser().getEmail() != null) {
+            Log.i("UserMail", FirebaseAuth.getInstance().getCurrentUser().getEmail());
             userMail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
         }
 

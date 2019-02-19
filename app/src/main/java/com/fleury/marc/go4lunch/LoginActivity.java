@@ -24,6 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.login_activity_coordinator_layout) CoordinatorLayout coordinatorLayout;
 
     private String uid;
+    private String mail;
     private String username;
     private String restaurant;
     private String urlPicture;
@@ -83,15 +84,16 @@ public class LoginActivity extends AppCompatActivity {
 
     private void createUserInFirestore() {
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-        restaurant = "";
+        restaurant = null;
         if (FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() != null) {
             urlPicture = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
         } else {
-            urlPicture = "";
+            urlPicture = null;
         }
 
-        UserHelper.createUser(uid, username, restaurant, urlPicture);
+        UserHelper.createUser(uid, mail, username, restaurant, urlPicture);
     }
 
     // --------------------
