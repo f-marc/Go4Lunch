@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fleury.marc.go4lunch.fragments.MapViewFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;

@@ -1,4 +1,4 @@
-package com.fleury.marc.go4lunch;
+package com.fleury.marc.go4lunch.fragments;
 
 import android.os.Bundle;
 
@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.fleury.marc.go4lunch.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
