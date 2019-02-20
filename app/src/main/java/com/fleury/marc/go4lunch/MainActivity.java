@@ -6,9 +6,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.fleury.marc.go4lunch.fragments.MapViewFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -78,40 +81,29 @@ public class MainActivity extends AppCompatActivity {
     // CONFIGURATION
     //----------------------
 
-    private void configureToolbar(){
+    private void configureToolbar() {
         this.toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("I'm Hungry!");
     }
 
-    private void configureDrawerLayout(){
+    private void configureDrawerLayout() {
         this.drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }
 
-    private void configureNavigationView(){
+    private void configureNavigationView() {
         navigationView = findViewById(R.id.activity_main_nav_view);
         headerView = navigationView.getHeaderView(0);
 
-        TextView userName = headerView.findViewById(R.id.nav_header_user_name);
-        TextView userMail = headerView.findViewById(R.id.nav_header_user_mail);
-
-        if (FirebaseAuth.getInstance().getCurrentUser().getDisplayName() != null) {
-            Log.i("UserName", FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-            userName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-        }
-
-        if (FirebaseAuth.getInstance().getCurrentUser().getEmail() != null) {
-            Log.i("UserMail", FirebaseAuth.getInstance().getCurrentUser().getEmail());
-            userMail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-        }
+        updateUserInfo(headerView);
 
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
 
-            switch (id){
+            switch (id) {
                 case R.id.nav_lunch:
                     Toast.makeText(getApplicationContext(), R.string.nav_lunch, Toast.LENGTH_LONG).show();
                     break;
@@ -131,6 +123,30 @@ public class MainActivity extends AppCompatActivity {
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
+    }
+
+    public void updateUserInfo(View headerView) {
+
+        TextView userName = headerView.findViewById(R.id.nav_header_user_name);
+        TextView userMail = headerView.findViewById(R.id.nav_header_user_mail);
+        ImageView userImage = headerView.findViewById(R.id.nav_header_user_image);
+
+        if (FirebaseAuth.getInstance().getCurrentUser().getDisplayName() != null) {
+            Log.i("UserName", FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+            userName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        }
+
+        if (FirebaseAuth.getInstance().getCurrentUser().getEmail() != null) {
+            Log.i("UserMail", FirebaseAuth.getInstance().getCurrentUser().getEmail());
+            userMail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        }
+
+        if (FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() != null) {
+            Glide.with(this)
+                    .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(userImage);
+        }
     }
 
     //----------------------
