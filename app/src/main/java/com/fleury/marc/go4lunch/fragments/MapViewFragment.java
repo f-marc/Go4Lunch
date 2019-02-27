@@ -20,7 +20,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapViewFragment extends Fragment implements OnMapReadyCallback {
 
-    //private GoogleMap mMap;
+    private GoogleMap mMap;
+    private double lng;
+    private double lat;
+    private String name;
+    private String address;
 
     public static MapViewFragment newInstance() {
         return new MapViewFragment();
@@ -33,15 +37,27 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
         ButterKnife.bind(this, view);
 
+        if(getArguments() != null){
+            lng = getArguments().getDouble("lng");
+            lat = getArguments().getDouble("lat");
+            name = getArguments().getString("name");
+            address = getArguments().getString("address");
+        }
+
         return view;
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        //mMap = googleMap;
-        googleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(48.8534100, 2.3488000)));
+        mMap = googleMap;
+
+        //LatLng placeLoc = new LatLng(lat, lng);
+        LatLng placeLoc = new LatLng(48.8534100, 2.3488000);
+
         googleMap.addMarker(new MarkerOptions().position(new LatLng(48.8534100, 2.3488000)));
         googleMap.addMarker(new MarkerOptions().position(new LatLng(48.8544100, 2.3498000)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+        googleMap.animateCamera(CameraUpdateFactory.newLatLng(placeLoc));
     }
 
 }
