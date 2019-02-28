@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.fleury.marc.go4lunch.fragments.ListViewFragment;
 import com.fleury.marc.go4lunch.fragments.MapViewFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -43,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, mapFrag).commit();
                     return true;
                 case R.id.navigation_list:
-                    textMessage.setText(R.string.title_list);
+                    ListViewFragment listFrag = new ListViewFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, listFrag).commit();
                     return true;
                 case R.id.navigation_workmates:
                     textMessage.setText(R.string.title_workmates);
