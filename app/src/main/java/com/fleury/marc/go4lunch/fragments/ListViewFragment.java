@@ -22,11 +22,11 @@ import android.view.ViewGroup;
 import com.fleury.marc.go4lunch.R;
 import com.fleury.marc.go4lunch.ListViewAdapter;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.compat.GeoDataClient;
 import com.google.android.libraries.places.compat.Place;
 import com.google.android.libraries.places.compat.PlaceDetectionClient;
 import com.google.android.libraries.places.compat.PlaceLikelihood;
 import com.google.android.libraries.places.compat.PlaceLikelihoodBufferResponse;
+import com.google.android.libraries.places.compat.Places;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,12 +37,13 @@ public class ListViewFragment extends Fragment {
 
     @BindView(R.id.fragment_list_view_recycler) RecyclerView recyclerView;
 
-    public static final String TAG = "CurrentLocNearByPlaces";
     private static final int LOC_REQ_CODE = 1;
 
     private PlaceDetectionClient placeDetectionClient;
     private List<Place> placesList;
     private ListViewAdapter adapter;
+
+    Task<PlaceLikelihoodBufferResponse> placeResult;
 
     public static ListViewFragment newInstance() {
         return new ListViewFragment();
@@ -52,6 +53,8 @@ public class ListViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_view, container, false);
         ButterKnife.bind(this, view);
+
+        placeDetectionClient = Places.getPlaceDetectionClient(getActivity());
 
         configureRecyclerView();
         getCurrentPlaceItems();
@@ -77,19 +80,21 @@ public class ListViewFragment extends Fragment {
 
     @SuppressLint("MissingPermission")
     private void getCurrentPlaceData() {
-        Task<PlaceLikelihoodBufferResponse> placeResult = placeDetectionClient.
-                getCurrentPlace(null);
+        placeResult = placeDetectionClient.getCurrentPlace(null);
+        placeResult.addOnFailureListener(task ->
+                Log.i("testFail", "result"));
+        Log.i("testLog", "1");
 
         placeResult.addOnCompleteListener(task -> {
 
-            Log.d(TAG, "current location places info");
             PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
-
             for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                placesList.add(placeLikelihood.getPlace().freeze());
+                Log.i("test0", String.format("Place '%s' has likelihood: %g",
+                        placeLikelihood.getPlace().getName(),
+                        placeLikelihood.getLikelihood()));
+                        placesList.add(placeLikelihood.getPlace().freeze());
             }
             likelyPlaces.release();
-
         });
     }
 
