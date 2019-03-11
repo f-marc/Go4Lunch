@@ -14,11 +14,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fleury.marc.go4lunch.fragments.ListViewFragment;
 import com.fleury.marc.go4lunch.fragments.MapViewFragment;
+import com.fleury.marc.go4lunch.fragments.WorkmatesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -31,36 +31,31 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private View headerView;
-    private TextView textMessage;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_map:
-                    MapViewFragment mapFrag = new MapViewFragment();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, mapFrag).commit();
-                    return true;
-                case R.id.navigation_list:
-                    ListViewFragment listFrag = new ListViewFragment();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, listFrag).commit();
-                    return true;
-                case R.id.navigation_workmates:
-                    textMessage.setText(R.string.title_workmates);
-                    return true;
-            }
-            return false;
-        }
-    };
+            = item -> {
+                switch (item.getItemId()) {
+                    case R.id.navigation_map:
+                        MapViewFragment mapFrag = new MapViewFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, mapFrag).commit();
+                        return true;
+                    case R.id.navigation_list:
+                        ListViewFragment listFrag = new ListViewFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, listFrag).commit();
+                        return true;
+                    case R.id.navigation_workmates:
+                        WorkmatesFragment workmatesFrag = new WorkmatesFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, workmatesFrag).commit();
+                        return true;
+                }
+                return false;
+            };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textMessage = findViewById(R.id.message);
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
