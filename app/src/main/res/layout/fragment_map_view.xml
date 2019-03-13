@@ -9,4 +9,4 @@
     tools:context=".fragments.MapViewFragment"
     tools:layout="@layout/activity_main"
     map:cameraZoom="17"
-    map:uiMapToolbar="false" />
+    map:uiMapToolbar="true" />

@@ -1,6 +1,7 @@
 package com.fleury.marc.go4lunch;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,13 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
     private List<Place> placesList;
     private Context context;
 
-    public ListViewAdapter(List<Place> list, Context ctx) {
-        placesList = list;
+    public ListViewAdapter(Context ctx) {
         context = ctx;
+    }
+
+    public void setPlaces(List<Place> list) {
+        this.placesList = list;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -56,6 +61,9 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
 
     @Override
     public int getItemCount() {
+        if(placesList == null){
+            return 0;
+        }
         return placesList.size();
     }
 

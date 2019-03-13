@@ -65,16 +65,17 @@ public class ListViewFragment extends Fragment {
     private void configureRecyclerView(){
 
         this.placesList = new ArrayList<>();
-        this.adapter = new ListViewAdapter(this.placesList, getContext());
+        this.adapter = new ListViewAdapter(getContext());
         this.recyclerView.setAdapter(this.adapter);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     private void getCurrentPlaceItems() {
-        if (isLocationAccessPermitted()) {
-            getCurrentPlaceData();
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOC_REQ_CODE);
         } else {
-            requestLocationAccessPermission();
+            getCurrentPlaceData();
+
         }
     }
 
@@ -94,20 +95,8 @@ public class ListViewFragment extends Fragment {
                 placesList.add(placeLikelihood.getPlace().freeze());
             }
             likelyPlaces.release();
+            adapter.setPlaces(placesList);
         });
-    }
-
-    private boolean isLocationAccessPermitted() {
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private void requestLocationAccessPermission() {
-        ActivityCompat.requestPermissions(getActivity(),
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOC_REQ_CODE);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
