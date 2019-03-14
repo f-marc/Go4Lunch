@@ -105,12 +105,14 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), R.string.nav_lunch, Toast.LENGTH_LONG).show();
                     break;
                 case R.id.nav_settings:
-                    Toast.makeText(getApplicationContext(), R.string.nav_settings, Toast.LENGTH_LONG).show();
+                    Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivity(settingsIntent);
+                    finish();
                     break;
                 case R.id.nav_logout:
                     FirebaseAuth.getInstance().signOut();
-                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                    startActivity(intent);
+                    Intent signOutIntent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(signOutIntent);
                     finish();
                     break;
                 default:
