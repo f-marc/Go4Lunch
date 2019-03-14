@@ -9,18 +9,18 @@ import butterknife.ButterKnife;
 
 public class ListViewHolder extends RecyclerView.ViewHolder {
 
-    @BindView(R.id.item_name) TextView itemName;
-    @BindView(R.id.item_address) TextView itemAddress;
-    @BindView(R.id.item_hours) TextView itemHours;
+    TextView itemName;
+    TextView itemAddress;
+    TextView itemHours;
 
 
     public ListViewHolder(View itemView) {
         super(itemView);
-        ButterKnife.bind(this, itemView);
+        //ButterKnife.bind(this, itemView);
 
-        //itemName = itemView.findViewById(R.id.item_name);
-        //itemAddress = itemView.findViewById(R.id.item_address);
-        //itemHours = itemView.findViewById(R.id.item_hours);
+        itemName = itemView.findViewById(R.id.item_name);
+        itemAddress = itemView.findViewById(R.id.item_address);
+        itemHours = itemView.findViewById(R.id.item_hours);
     }
 
     public void updateWithPlace(String itemName, String itemAddress, String itemHours){

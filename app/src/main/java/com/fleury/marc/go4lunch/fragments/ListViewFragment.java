@@ -83,14 +83,13 @@ public class ListViewFragment extends Fragment {
     private void getCurrentPlaceData() {
         placeResult = placeDetectionClient.getCurrentPlace(null);
         placeResult.addOnFailureListener(task ->
-                Log.i("testFail", "result"));
-        Log.i("testLog", "1");
+                Log.i("List : onFailure", "Fail")
+        );
 
         placeResult.addOnCompleteListener(task -> {
-
             PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
             for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                Log.i("test0", String.format("Place '%s' has likelihood: %g",
+                Log.i("List : onComplete", String.format("Place '%s' has likelihood: %g",
                         placeLikelihood.getPlace().getName(), placeLikelihood.getLikelihood()));
                 placesList.add(placeLikelihood.getPlace().freeze());
             }

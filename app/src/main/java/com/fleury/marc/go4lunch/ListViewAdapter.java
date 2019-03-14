@@ -30,7 +30,7 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
     public ListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_list_view, parent, false);
+                .inflate(R.layout.fragment_list_view_item, parent, false);
 
 
         return new ListViewHolder(view);
