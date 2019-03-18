@@ -1,7 +1,6 @@
 package com.fleury.marc.go4lunch;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +31,6 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_list_view_item, parent, false);
 
-
         return new ListViewHolder(view);
     }
 
@@ -44,19 +42,10 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
         String name = place.getName().toString();
         String address = place.getAddress().toString();
         String phone = place.getPhoneNumber().toString();
+        Float rating = place.getRating();
 
-        /*if(place.getWebsiteUri() != null){
-            viewHolder.website.setText(place.getWebsiteUri().toString());
-        }
 
-        if(place.getRating() > -1){
-            viewHolder.ratingBar.setNumStars((int)place.getRating());
-        }else{
-            viewHolder.ratingBar.setVisibility(View.GONE);
-        }*/
-
-        viewHolder.updateWithPlace(name, address, phone);
-
+        viewHolder.updateWithPlace(name, address, phone, rating);
     }
 
     @Override

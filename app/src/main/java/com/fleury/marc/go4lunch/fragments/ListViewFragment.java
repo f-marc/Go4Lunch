@@ -35,7 +35,8 @@ import static android.app.Activity.RESULT_OK;
 
 public class ListViewFragment extends Fragment {
 
-    @BindView(R.id.fragment_list_view_recycler) RecyclerView recyclerView;
+    @BindView(R.id.fragment_list_view_recycler)
+    RecyclerView recyclerView;
 
     private static final int LOC_REQ_CODE = 1;
 
@@ -62,7 +63,7 @@ public class ListViewFragment extends Fragment {
         return view;
     }
 
-    private void configureRecyclerView(){
+    private void configureRecyclerView() {
 
         this.placesList = new ArrayList<>();
         this.adapter = new ListViewAdapter(getContext());
@@ -89,9 +90,11 @@ public class ListViewFragment extends Fragment {
         placeResult.addOnCompleteListener(task -> {
             PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
             for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                Log.i("List : onComplete", String.format("Place '%s' has likelihood: %g",
-                        placeLikelihood.getPlace().getName(), placeLikelihood.getLikelihood()));
-                placesList.add(placeLikelihood.getPlace().freeze());
+                if (placeLikelihood.getPlace().getPlaceTypes().contains(79)) {
+                    Log.i("List : onComplete", String.format("Place '%s' has likelihood: %g",
+                            placeLikelihood.getPlace().getName(), placeLikelihood.getLikelihood()));
+                    placesList.add(placeLikelihood.getPlace().freeze());
+                }
             }
             likelyPlaces.release();
             adapter.setPlaces(placesList);

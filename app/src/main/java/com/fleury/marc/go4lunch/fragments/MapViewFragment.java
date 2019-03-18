@@ -24,15 +24,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.compat.Place;
 import com.google.android.libraries.places.compat.PlaceDetectionClient;
-import com.google.android.libraries.places.compat.PlaceFilter;
 import com.google.android.libraries.places.compat.PlaceLikelihood;
 import com.google.android.libraries.places.compat.PlaceLikelihoodBufferResponse;
 import com.google.android.libraries.places.compat.Places;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class MapViewFragment extends Fragment implements OnMapReadyCallback {
 
@@ -41,8 +37,6 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     private LatLng placeLoc;
     private PlaceDetectionClient placeDetectionClient;
     private Task<PlaceLikelihoodBufferResponse> placeResult;
-
-    PlaceFilter filter;
 
     private double lng;
     private double lat;
@@ -105,11 +99,11 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
         placeResult.addOnCompleteListener(task -> {
             PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
             for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                //Log.i("Map : onComplete", String.format("Place '%s' has likelihood: %g", placeLikelihood.getPlace().getName(), placeLikelihood.getLikelihood()));
                 Log.i("Map : onComplete", String.format("Place '%s' has likelihood: %g", placeLikelihood.getPlace().getPlaceTypes(), placeLikelihood.getLikelihood()));
-                //googleMap.addMarker(new MarkerOptions().position(placeLikelihood.getPlace().getLatLng()));
                 if (placeLikelihood.getPlace().getPlaceTypes().contains(79)) {
-                    googleMap.addMarker(new MarkerOptions().position(placeLikelihood.getPlace().getLatLng()));
+                    googleMap.addMarker(new MarkerOptions()
+                            .position(placeLikelihood.getPlace().getLatLng())
+                            .title(placeLikelihood.getPlace().getName().toString()));
                 }
             }
             likelyPlaces.release();
@@ -117,7 +111,6 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
 
         //googleMap.addMarker(new MarkerOptions().position(new LatLng(48.8534100, 2.3488000)));
         //googleMap.addMarker(new MarkerOptions().position(new LatLng(48.8544100, 2.3498000)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-
     }
 
 }
