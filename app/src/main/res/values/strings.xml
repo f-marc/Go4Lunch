@@ -29,8 +29,10 @@
     <string name="twitter_consumer_key" translatable="false">fMjGWNhjR40QaHNGyyfCpTBin</string>
     <string name="twitter_consumer_secret" translatable="false">jKQOTLwjRDLLI2ZzMswDQKwQsPNdy9fcmFQUuCzsRks0RxXMt8</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- DETAIL ACTIVITY -->
+    <string name="call">CALL</string>
+    <string name="like">LIKE</string>
+    <string name="website">WEBSITE</string>
 
 </resources>
 
