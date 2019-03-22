@@ -43,9 +43,10 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
         String address = place.getAddress().toString();
         String phone = place.getPhoneNumber().toString();
         Float rating = place.getRating();
+        double latitude = place.getLatLng().latitude;
+        double longitude = place.getLatLng().longitude;
 
-
-        viewHolder.updateWithPlace(name, address, phone, rating);
+        viewHolder.updateWithPlace(name, address, phone, rating, latitude, longitude);
     }
 
     @Override

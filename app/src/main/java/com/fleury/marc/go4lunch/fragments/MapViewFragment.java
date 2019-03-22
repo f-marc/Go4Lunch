@@ -1,6 +1,8 @@
 package com.fleury.marc.go4lunch.fragments;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -46,6 +48,8 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     private double latitude = 0.0;
     private double longitude = 0.0;
 
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
     private static final int LOC_REQ_CODE = 1;
 
     public static MapViewFragment newInstance() {
@@ -58,6 +62,9 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         ButterKnife.bind(this, view);
+
+        pref = getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
+        editor = pref.edit();
 
         client = LocationServices.getFusedLocationProviderClient(getContext());
         placeDetectionClient = Places.getPlaceDetectionClient(getActivity());
@@ -83,13 +90,14 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
                 if(location != null){
                     latitude = location.getLatitude();
                     longitude = location.getLongitude();
+                    putDouble(editor, "locLat", latitude);
+                    putDouble(editor, "locLng", longitude);
                     placeLoc = new LatLng(latitude, longitude);
                     googleMap.animateCamera(CameraUpdateFactory.newLatLng(placeLoc));
                 }
             });
             mMap.setMyLocationEnabled(true);
         }
-
 
         placeResult = placeDetectionClient.getCurrentPlace(null);
         placeResult.addOnFailureListener(task ->
@@ -113,4 +121,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
         //googleMap.addMarker(new MarkerOptions().position(new LatLng(48.8544100, 2.3498000)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
     }
 
+    SharedPreferences.Editor putDouble(final SharedPreferences.Editor edit, final String key, final double value) {
+        return edit.putLong(key, Double.doubleToRawLongBits(value));
+    }
 }
