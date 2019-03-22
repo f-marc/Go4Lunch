@@ -24,6 +24,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.compat.PlaceDetectionClient;
@@ -82,6 +83,11 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        googleMap.setOnMarkerClickListener(marker ->{
+            PlaceLikelihood resto = (PlaceLikelihood) marker.getTag();
+            return true;
+        });
+
 
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOC_REQ_CODE);
@@ -111,7 +117,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
                 if (placeLikelihood.getPlace().getPlaceTypes().contains(79)) {
                     googleMap.addMarker(new MarkerOptions()
                             .position(placeLikelihood.getPlace().getLatLng())
-                            .title(placeLikelihood.getPlace().getName().toString()));
+                            .title(placeLikelihood.getPlace().getName().toString())).setTag(placeLikelihood);
                 }
             }
             likelyPlaces.release();

@@ -91,8 +91,8 @@ public class ListViewFragment extends Fragment {
             PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
             for (PlaceLikelihood placeLikelihood : likelyPlaces) {
                 if (placeLikelihood.getPlace().getPlaceTypes().contains(79)) {
-                    Log.i("List : onComplete", String.format("Place '%s' has likelihood: %g",
-                            placeLikelihood.getPlace().getName(), placeLikelihood.getLikelihood()));
+                    //Log.i("List : onComplete", String.format("Place '%s' has likelihood: %g",
+                            //placeLikelihood.getPlace().getName(), placeLikelihood.getLikelihood()));
                     placesList.add(placeLikelihood.getPlace().freeze());
                 }
             }
