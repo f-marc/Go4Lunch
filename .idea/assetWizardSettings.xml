@@ -29,11 +29,11 @@
                         <option name="values">
                           <map>
                             <entry key="color" value="ff5722" />
-                            <entry key="height" value="36" />
-                            <entry key="outputName" value="ic_public_black_36dp" />
+                            <entry key="height" value="30" />
+                            <entry key="outputName" value="ic_public_black_30dp" />
                             <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="C:\Users\marc-" />
-                            <entry key="width" value="36" />
+                            <entry key="width" value="30" />
                           </map>
                         </option>
                       </PersistentState>

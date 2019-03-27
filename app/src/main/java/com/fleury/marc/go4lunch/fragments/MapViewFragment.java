@@ -2,6 +2,7 @@ package com.fleury.marc.go4lunch.fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -16,7 +17,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.fleury.marc.go4lunch.DetailActivity;
 import com.fleury.marc.go4lunch.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -73,7 +76,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
         client = LocationServices.getFusedLocationProviderClient(getContext());
         placeDetectionClient = Places.getPlaceDetectionClient(getActivity());
 
-        if(getArguments() != null){
+        if (getArguments() != null) {
             lng = getArguments().getDouble("lng");
             lat = getArguments().getDouble("lat");
             name = getArguments().getString("name");
@@ -100,8 +103,21 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
         }
 
 
-        googleMap.setOnMarkerClickListener(marker ->{
+        googleMap.setOnMarkerClickListener(marker -> {
             PlaceLikelihood resto = (PlaceLikelihood) marker.getTag();
+            Intent detailActivityIntent = new Intent(getContext(), DetailActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("detailName", resto.getPlace().getName().toString());
+            bundle.putString("detailAddress", resto.getPlace().getAddress().toString());
+            bundle.putFloat("detailRating", resto.getPlace().getRating());
+            if (resto.getPlace().getPhoneNumber() != null) {
+                bundle.putString("detailNumber", resto.getPlace().getPhoneNumber().toString());
+            }
+            if (resto.getPlace().getWebsiteUri() != null) {
+                bundle.putString("detailWebsite", resto.getPlace().getWebsiteUri().toString());
+            }
+            detailActivityIntent.putExtras(bundle);
+            startActivity(detailActivityIntent);
             return true;
         });
 
@@ -110,7 +126,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOC_REQ_CODE);
         } else {
             client.getLastLocation().addOnSuccessListener(getActivity(), location -> {
-                if(location != null){
+                if (location != null) {
                     latitude = location.getLatitude();
                     longitude = location.getLongitude();
                     putDouble(editor, "locLat", latitude);

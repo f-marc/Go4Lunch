@@ -38,12 +38,8 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
         this.itemAddress.setText(subAddress);
         //this.itemHours.setText(itemHours);
 
-        if(itemRating > -1){
-            double rating = (itemRating / 1.7);
-            this.itemRating.setRating((float) rating);
-        } else{
-            this.itemRating.setVisibility(View.GONE);
-        }
+        double rating = (itemRating / 1.7);
+        this.itemRating.setRating((float) rating);
 
         Location.distanceBetween(getDouble(pref, "locLat", 0.0), getDouble(pref, "locLng", 0.0), latitude, longitude, result);
         this.itemDistance.setText(result[0] + "m");

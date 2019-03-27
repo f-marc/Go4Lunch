@@ -28,7 +28,9 @@
             app:layout_constraintTop_toTopOf="parent"
             android:textSize="18sp"
             android:textColor="@color/textBlack"
-            android:text=""/>
+            android:text=""
+            android:maxLength="25"
+            android:ellipsize="end"/>
 
         <TextView
             android:id="@+id/item_address"
