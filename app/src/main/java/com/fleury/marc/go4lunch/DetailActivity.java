@@ -3,6 +3,7 @@ package com.fleury.marc.go4lunch;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,21 +22,14 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 public class DetailActivity extends AppCompatActivity {
 
-    private TextView name;
-    private TextView address;
-    private TextView likeText;
+    private TextView name, address, likeText;
+    private ImageView call, like, website;
     private RatingBar rating;
-    private ImageView call;
-    private ImageView like;
-    private ImageView website;
 
-    private String detailName;
-    private String detailAddress;
-    private String detailNumber;
-    private String detailWebsite;
+    private String detailName, detailAddress, detailId, detailNumber, detailWebsite;
     private Float detailRating;
 
-    private String restaurant = "";
+    private String restaurant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +50,7 @@ public class DetailActivity extends AppCompatActivity {
 
         detailName = getIntent().getExtras().getString("detailName");
         detailAddress = getIntent().getExtras().getString("detailAddress");
+        detailId = getIntent().getExtras().getString("detailId");
         detailRating = getIntent().getExtras().getFloat("detailRating");
 
         if (getIntent().getExtras().getString("detailNumber") != null){
@@ -70,6 +65,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void updateRestaurant(){
+        restaurant = "";
         UserHelper.getUser(FirebaseAuth.getInstance().getUid()).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
@@ -85,6 +81,7 @@ public class DetailActivity extends AppCompatActivity {
                 Log.d("TAG", "Get failed with ", task.getException());
             }
         });
+        Log.d("TAGresto", restaurant);
     }
 
     private void updateDetail(){
@@ -96,10 +93,13 @@ public class DetailActivity extends AppCompatActivity {
         double doubleRating = (detailRating / 1.7);
         rating.setRating((float) doubleRating);
 
-        if (restaurant.equals(detailName)) {
+        Log.d("TAGvalues", "restaurant = '" + restaurant + "' ; detailId = '" + detailId + "'");
+        if (restaurant.equals(detailId)) {
+            Log.d("TAGbug", "==");
             like.setImageResource(R.drawable.ic_star_yellow_30dp);
             likeText.setText(R.string.liked);
         } else {
+            Log.d("TAGbug", "!=");
             like.setImageResource(R.drawable.ic_star_orange_30dp);
             likeText.setText(R.string.like);
         }
@@ -115,7 +115,7 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
         else if(v == like){
-            if (restaurant.equals(detailName)){
+            if (restaurant.equals(detailId)){
                 Log.d("TAGboucle", "==");
                 UserHelper.updateRestaurant(null, FirebaseAuth.getInstance().getUid());
                 like.setImageResource(R.drawable.ic_star_orange_30dp);
@@ -123,7 +123,7 @@ public class DetailActivity extends AppCompatActivity {
                 Toast.makeText(this, "UNLIKED !", Toast.LENGTH_SHORT).show();
             } else {
                 Log.d("TAGboucle", "!=");
-                UserHelper.updateRestaurant(detailName, FirebaseAuth.getInstance().getUid());
+                UserHelper.updateRestaurant(detailId, FirebaseAuth.getInstance().getUid());
                 like.setImageResource(R.drawable.ic_star_yellow_30dp);
                 likeText.setText(R.string.liked);
                 Toast.makeText(this, "LIKED !", Toast.LENGTH_SHORT).show();

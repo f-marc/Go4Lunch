@@ -110,6 +110,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
             bundle.putString("detailName", resto.getPlace().getName().toString());
             bundle.putString("detailAddress", resto.getPlace().getAddress().toString());
             bundle.putFloat("detailRating", resto.getPlace().getRating());
+            bundle.putString("detailId", resto.getPlace().getId());
             if (resto.getPlace().getPhoneNumber() != null) {
                 bundle.putString("detailNumber", resto.getPlace().getPhoneNumber().toString());
             }

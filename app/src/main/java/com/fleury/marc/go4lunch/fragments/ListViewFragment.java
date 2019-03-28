@@ -83,6 +83,7 @@ public class ListViewFragment extends Fragment {
                     bundle.putString("detailName", place.getName().toString());
                     bundle.putString("detailAddress", place.getAddress().toString());
                     bundle.putFloat("detailRating", place.getRating());
+                    bundle.putString("detailId", place.getId());
                     if (place.getPhoneNumber() != null) {
                         bundle.putString("detailNumber", place.getPhoneNumber().toString());
                     }
