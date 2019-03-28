@@ -32,6 +32,7 @@
     <!-- DETAIL ACTIVITY -->
     <string name="call">CALL</string>
     <string name="like">LIKE</string>
+    <string name="liked">LIKED</string>
     <string name="website">WEBSITE</string>
 
     <string name="hello_blank_fragment">HELLO</string>
