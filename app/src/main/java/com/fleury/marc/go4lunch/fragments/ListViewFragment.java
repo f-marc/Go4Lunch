@@ -19,8 +19,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.fleury.marc.go4lunch.DetailActivity;
 import com.fleury.marc.go4lunch.R;
 import com.fleury.marc.go4lunch.ListViewAdapter;
+import com.fleury.marc.go4lunch.utils.ItemClickSupport;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.compat.Place;
 import com.google.android.libraries.places.compat.PlaceDetectionClient;
@@ -58,6 +60,7 @@ public class ListViewFragment extends Fragment {
         placeDetectionClient = Places.getPlaceDetectionClient(getActivity());
 
         configureRecyclerView();
+        configureOnClickRecyclerView();
         getCurrentPlaceItems();
 
         return view;
@@ -69,6 +72,26 @@ public class ListViewFragment extends Fragment {
         this.adapter = new ListViewAdapter(getContext());
         this.recyclerView.setAdapter(this.adapter);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
+
+    private void configureOnClickRecyclerView(){
+        ItemClickSupport.addTo(recyclerView, R.layout.fragment_list_view_item)
+                .setOnItemClickListener((recyclerView, position, v) -> {
+                    Place place = adapter.getPlaces(position);
+                    Intent detailActivityIntent = new Intent(getContext(), DetailActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("detailName", place.getName().toString());
+                    bundle.putString("detailAddress", place.getAddress().toString());
+                    bundle.putFloat("detailRating", place.getRating());
+                    if (place.getPhoneNumber() != null) {
+                        bundle.putString("detailNumber", place.getPhoneNumber().toString());
+                    }
+                    if (place.getWebsiteUri() != null) {
+                        bundle.putString("detailWebsite", place.getWebsiteUri().toString());
+                    }
+                    detailActivityIntent.putExtras(bundle);
+                    startActivity(detailActivityIntent);
+                });
     }
 
     private void getCurrentPlaceItems() {

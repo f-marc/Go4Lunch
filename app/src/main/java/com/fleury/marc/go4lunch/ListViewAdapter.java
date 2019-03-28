@@ -25,6 +25,10 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
         notifyDataSetChanged();
     }
 
+    public Place getPlaces(int position){
+        return this.placesList.get(position);
+    }
+
     @Override
     public ListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
