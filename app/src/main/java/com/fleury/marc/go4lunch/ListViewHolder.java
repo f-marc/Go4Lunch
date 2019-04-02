@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ListViewHolder extends RecyclerView.ViewHolder {
@@ -42,7 +45,9 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
         this.itemRating.setRating((float) rating);
 
         Location.distanceBetween(getDouble(pref, "locLat", 0.0), getDouble(pref, "locLng", 0.0), latitude, longitude, result);
-        this.itemDistance.setText(result[0] + "m");
+        DecimalFormat df = new DecimalFormat("#");
+        df.setRoundingMode(RoundingMode.HALF_UP);
+        this.itemDistance.setText(df.format(result[0]) + "m");
     }
 
     double getDouble(final SharedPreferences prefs, final String key, final double defaultValue) {

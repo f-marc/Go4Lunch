@@ -18,7 +18,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.fleury.marc.go4lunch.DetailActivity;
 import com.fleury.marc.go4lunch.R;
@@ -48,11 +47,6 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     private PlaceDetectionClient placeDetectionClient;
     private Task<PlaceLikelihoodBufferResponse> placeResult;
 
-    private double lng;
-    private double lat;
-    private String name;
-    private String address;
-
     private double latitude = 0.0;
     private double longitude = 0.0;
 
@@ -76,13 +70,6 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
 
         client = LocationServices.getFusedLocationProviderClient(getContext());
         placeDetectionClient = Places.getPlaceDetectionClient(getActivity());
-
-        if (getArguments() != null) {
-            lng = getArguments().getDouble("lng");
-            lat = getArguments().getDouble("lat");
-            name = getArguments().getString("name");
-            address = getArguments().getString("address");
-        }
 
         return view;
     }
@@ -131,8 +118,8 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
                 if (location != null) {
                     latitude = location.getLatitude();
                     longitude = location.getLongitude();
-                    putDouble(editor, "locLat", latitude);
-                    putDouble(editor, "locLng", longitude);
+                    putDouble(editor, "locLat", latitude).apply();
+                    putDouble(editor, "locLng", longitude).apply();
                     placeLoc = new LatLng(latitude, longitude);
                     googleMap.animateCamera(CameraUpdateFactory.newLatLng(placeLoc));
                 }
