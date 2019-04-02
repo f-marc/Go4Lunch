@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import butterknife.ButterKnife;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -111,7 +112,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
             bundle.putString("detailAddress", resto.getPlace().getAddress().toString());
             bundle.putFloat("detailRating", resto.getPlace().getRating());
             bundle.putString("detailId", resto.getPlace().getId());
-            if (resto.getPlace().getPhoneNumber() != null) {
+            if (!TextUtils.isEmpty(resto.getPlace().getPhoneNumber())) {
                 bundle.putString("detailNumber", resto.getPlace().getPhoneNumber().toString());
             }
             if (resto.getPlace().getWebsiteUri() != null) {

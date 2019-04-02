@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,7 +85,7 @@ public class ListViewFragment extends Fragment {
                     bundle.putString("detailAddress", place.getAddress().toString());
                     bundle.putFloat("detailRating", place.getRating());
                     bundle.putString("detailId", place.getId());
-                    if (place.getPhoneNumber() != null) {
+                    if (!TextUtils.isEmpty(place.getPhoneNumber())) {
                         bundle.putString("detailNumber", place.getPhoneNumber().toString());
                     }
                     if (place.getWebsiteUri() != null) {

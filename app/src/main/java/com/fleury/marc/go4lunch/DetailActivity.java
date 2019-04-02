@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -53,10 +54,10 @@ public class DetailActivity extends AppCompatActivity {
         detailId = getIntent().getExtras().getString("detailId");
         detailRating = getIntent().getExtras().getFloat("detailRating");
 
-        if (getIntent().getExtras().getString("detailNumber") != null){
+        if (!TextUtils.isEmpty(getIntent().getExtras().getString("detailNumber"))){
             detailNumber = getIntent().getExtras().getString("detailNumber");
         }
-        if (getIntent().getExtras().getString("detailWebsite") != null){
+        if (!TextUtils.isEmpty(getIntent().getExtras().getString("detailWebsite"))){
             detailWebsite = getIntent().getExtras().getString("detailWebsite");
         }
 
@@ -104,7 +105,6 @@ public class DetailActivity extends AppCompatActivity {
             likeText.setText(R.string.like);
         }
     }
-
 
     public void onClick(View v) {
         if(v == call){
