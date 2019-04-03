@@ -1,4 +1,4 @@
-package com.fleury.marc.go4lunch;
+package com.fleury.marc.go4lunch.controllers.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.widget.Button;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
+import com.fleury.marc.go4lunch.R;
 import com.fleury.marc.go4lunch.api.UserHelper;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;

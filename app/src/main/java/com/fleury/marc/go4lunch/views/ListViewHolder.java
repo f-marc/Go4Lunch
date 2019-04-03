@@ -1,4 +1,4 @@
-package com.fleury.marc.go4lunch;
+package com.fleury.marc.go4lunch.views;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,6 +6,8 @@ import android.location.Location;
 import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.fleury.marc.go4lunch.R;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;

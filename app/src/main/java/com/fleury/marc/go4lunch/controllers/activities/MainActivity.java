@@ -1,4 +1,4 @@
-package com.fleury.marc.go4lunch;
+package com.fleury.marc.go4lunch.controllers.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,9 +12,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.fleury.marc.go4lunch.fragments.ListViewFragment;
-import com.fleury.marc.go4lunch.fragments.MapViewFragment;
-import com.fleury.marc.go4lunch.fragments.WorkmatesFragment;
+import com.fleury.marc.go4lunch.R;
+import com.fleury.marc.go4lunch.controllers.fragments.ListViewFragment;
+import com.fleury.marc.go4lunch.controllers.fragments.MapViewFragment;
+import com.fleury.marc.go4lunch.controllers.fragments.WorkmatesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;

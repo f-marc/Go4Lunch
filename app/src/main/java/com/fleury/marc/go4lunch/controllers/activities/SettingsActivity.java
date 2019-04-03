@@ -1,9 +1,11 @@
-package com.fleury.marc.go4lunch;
+package com.fleury.marc.go4lunch.controllers.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
+
+import com.fleury.marc.go4lunch.R;
 
 public class SettingsActivity extends AppCompatActivity {
 

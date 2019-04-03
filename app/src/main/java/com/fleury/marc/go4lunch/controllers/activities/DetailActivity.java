@@ -1,4 +1,4 @@
-package com.fleury.marc.go4lunch;
+package com.fleury.marc.go4lunch.controllers.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +13,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fleury.marc.go4lunch.R;
 import com.fleury.marc.go4lunch.api.UserHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

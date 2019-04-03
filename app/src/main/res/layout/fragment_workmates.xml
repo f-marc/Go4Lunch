@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/com_facebook_blue"
-    tools:context=".fragments.WorkmatesFragment">
+    tools:context=".controllers.fragments.WorkmatesFragment">
 
     <TextView
         android:layout_width="match_parent"

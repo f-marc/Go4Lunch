@@ -1,4 +1,4 @@
-package com.fleury.marc.go4lunch.fragments;
+package com.fleury.marc.go4lunch.controllers.fragments;
 
 import android.os.Bundle;
 

@@ -1,22 +1,24 @@
-package com.fleury.marc.go4lunch;
+package com.fleury.marc.go4lunch.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.fleury.marc.go4lunch.R;
+import com.fleury.marc.go4lunch.views.DetailViewHolder;
 import com.google.android.libraries.places.compat.Place;
 
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
+public class DetailAdapter extends RecyclerView.Adapter<DetailViewHolder> {
 
     private List<Place> placesList;
     private Context context;
 
-    public ListViewAdapter(Context ctx) {
+    public DetailAdapter(Context ctx) {
         context = ctx;
     }
 
@@ -30,16 +32,16 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
     }
 
     @Override
-    public ListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DetailViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_list_view_item, parent, false);
+                .inflate(R.layout.activity_detail_item, parent, false);
 
-        return new ListViewHolder(view);
+        return new DetailViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ListViewHolder viewHolder, int position) {
+    public void onBindViewHolder(DetailViewHolder viewHolder, int position) {
         final int itemPos = position;
         final Place place = placesList.get(position);
 
@@ -50,7 +52,7 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
         double latitude = place.getLatLng().latitude;
         double longitude = place.getLatLng().longitude;
 
-        viewHolder.updateWithPlace(name, address, phone, rating, latitude, longitude);
+        //viewHolder.updateWithPlace(name, address, phone, rating, latitude, longitude);
     }
 
     @Override

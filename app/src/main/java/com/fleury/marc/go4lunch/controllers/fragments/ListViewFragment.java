@@ -1,4 +1,4 @@
-package com.fleury.marc.go4lunch.fragments;
+package com.fleury.marc.go4lunch.controllers.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -20,9 +20,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.fleury.marc.go4lunch.DetailActivity;
+import com.fleury.marc.go4lunch.controllers.activities.DetailActivity;
 import com.fleury.marc.go4lunch.R;
-import com.fleury.marc.go4lunch.ListViewAdapter;
+import com.fleury.marc.go4lunch.adapters.ListViewAdapter;
 import com.fleury.marc.go4lunch.utils.ItemClickSupport;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.compat.Place;
