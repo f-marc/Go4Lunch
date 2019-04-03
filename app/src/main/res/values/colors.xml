@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#FF5722</color>
     <color name="colorPrimaryDark">#C41C00</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#FFCB00</color>
 
     <color name="colorDrawerBackground">#FF8A50</color>
     <color name="colorHamburger">#FFFFFF</color>

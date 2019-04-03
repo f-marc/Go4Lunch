@@ -2,7 +2,9 @@ package com.fleury.marc.go4lunch.controllers.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -38,14 +40,16 @@ import static android.app.Activity.RESULT_OK;
 
 public class ListViewFragment extends Fragment {
 
-    @BindView(R.id.fragment_list_view_recycler)
-    RecyclerView recyclerView;
+    @BindView(R.id.fragment_list_view_recycler) RecyclerView recyclerView;
 
     private static final int LOC_REQ_CODE = 1;
 
     private PlaceDetectionClient placeDetectionClient;
     private List<Place> placesList;
     private ListViewAdapter adapter;
+
+    private double lat;
+    private double lng;
 
     Task<PlaceLikelihoodBufferResponse> placeResult;
 
@@ -60,6 +64,11 @@ public class ListViewFragment extends Fragment {
 
         placeDetectionClient = Places.getPlaceDetectionClient(getActivity());
 
+        SharedPreferences pref = getContext().getSharedPreferences("pref", Context.MODE_PRIVATE);
+
+        lat = getDouble(pref, "locLat", 0.0);
+        lng = getDouble(pref, "locLng", 0.0);
+
         configureRecyclerView();
         configureOnClickRecyclerView();
         getCurrentPlaceItems();
@@ -70,7 +79,7 @@ public class ListViewFragment extends Fragment {
     private void configureRecyclerView() {
 
         this.placesList = new ArrayList<>();
-        this.adapter = new ListViewAdapter(getContext());
+        this.adapter = new ListViewAdapter(getContext(), lat, lng);
         this.recyclerView.setAdapter(this.adapter);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
@@ -116,8 +125,6 @@ public class ListViewFragment extends Fragment {
             PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
             for (PlaceLikelihood placeLikelihood : likelyPlaces) {
                 if (placeLikelihood.getPlace().getPlaceTypes().contains(79)) {
-                    //Log.i("List : onComplete", String.format("Place '%s' has likelihood: %g",
-                            //placeLikelihood.getPlace().getName(), placeLikelihood.getLikelihood()));
                     placesList.add(placeLikelihood.getPlace().freeze());
                 }
             }
@@ -132,6 +139,10 @@ public class ListViewFragment extends Fragment {
                 getCurrentPlaceData();
             }
         }
+    }
+
+    private double getDouble(final SharedPreferences prefs, final String key, final double defaultValue) {
+        return Double.longBitsToDouble(prefs.getLong(key, Double.doubleToLongBits(defaultValue)));
     }
 
 }

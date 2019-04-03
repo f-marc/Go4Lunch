@@ -37,7 +37,7 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
         pref = itemName.getContext().getSharedPreferences("pref", Context.MODE_PRIVATE);
     }
 
-    public void updateWithPlace(String itemName, String itemAddress, String itemHours, Float itemRating, double latitude, double longitude){
+    public void updateWithPlace(String itemName, String itemAddress, String itemHours, Float itemRating, double lat, double lng, double latitude, double longitude){
         this.itemName.setText(itemName);
         String subAddress = itemAddress.substring(0, itemAddress.indexOf(","));
         this.itemAddress.setText(subAddress);
@@ -46,13 +46,10 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
         double rating = (itemRating / 1.7);
         this.itemRating.setRating((float) rating);
 
-        Location.distanceBetween(getDouble(pref, "locLat", 0.0), getDouble(pref, "locLng", 0.0), latitude, longitude, result);
+        Location.distanceBetween(lat, lng, latitude, longitude, result);
         DecimalFormat df = new DecimalFormat("#");
         df.setRoundingMode(RoundingMode.HALF_UP);
         this.itemDistance.setText(df.format(result[0]) + "m");
     }
 
-    double getDouble(final SharedPreferences prefs, final String key, final double defaultValue) {
-        return Double.longBitsToDouble(prefs.getLong(key, Double.doubleToLongBits(defaultValue)));
-    }
 }

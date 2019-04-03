@@ -18,8 +18,13 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
     private List<Place> placesList;
     private Context context;
 
-    public ListViewAdapter(Context ctx) {
+    private double lat;
+    private double lng;
+
+    public ListViewAdapter(Context ctx, double lat, double lng) {
         context = ctx;
+        this.lat = lat;
+        this.lng = lng;
     }
 
     public void setPlaces(List<Place> list) {
@@ -52,7 +57,7 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
         double latitude = place.getLatLng().latitude;
         double longitude = place.getLatLng().longitude;
 
-        viewHolder.updateWithPlace(name, address, phone, rating, latitude, longitude);
+        viewHolder.updateWithPlace(name, address, phone, rating, lat, lng, latitude, longitude);
     }
 
     @Override

@@ -5,7 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.RequestManager;
 import com.fleury.marc.go4lunch.R;
+import com.fleury.marc.go4lunch.models.User;
 import com.fleury.marc.go4lunch.views.DetailViewHolder;
 import com.google.android.libraries.places.compat.Place;
 
@@ -15,20 +17,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class DetailAdapter extends RecyclerView.Adapter<DetailViewHolder> {
 
-    private List<Place> placesList;
+    private List<User> usersList;
     private Context context;
+    private RequestManager glide;
 
-    public DetailAdapter(Context ctx) {
+    public DetailAdapter(Context ctx, RequestManager glide) {
         context = ctx;
+        this.glide = glide;
     }
 
-    public void setPlaces(List<Place> list) {
-        this.placesList = list;
+    public void setUsers(List<User> user) {
+        this.usersList = user;
         notifyDataSetChanged();
     }
 
-    public Place getPlaces(int position){
-        return this.placesList.get(position);
+    public User getUsers(int position){
+        return this.usersList.get(position);
     }
 
     @Override
@@ -43,24 +47,20 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailViewHolder> {
     @Override
     public void onBindViewHolder(DetailViewHolder viewHolder, int position) {
         final int itemPos = position;
-        final Place place = placesList.get(position);
+        final User user = usersList.get(position);
 
-        String name = place.getName().toString();
-        String address = place.getAddress().toString();
-        String phone = place.getPhoneNumber().toString();
-        Float rating = place.getRating();
-        double latitude = place.getLatLng().latitude;
-        double longitude = place.getLatLng().longitude;
+        String name = user.getUsername();
+        String image = user.getUrlPicture();
 
-        //viewHolder.updateWithPlace(name, address, phone, rating, latitude, longitude);
+        viewHolder.updateWithUser(image, name, this.glide);
     }
 
     @Override
     public int getItemCount() {
-        if(placesList == null){
+        if(usersList == null){
             return 0;
         }
-        return placesList.size();
+        return usersList.size();
     }
 
 }

@@ -1,9 +1,11 @@
 package com.fleury.marc.go4lunch.controllers.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,37 +16,39 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fleury.marc.go4lunch.R;
+import com.fleury.marc.go4lunch.adapters.DetailAdapter;
 import com.fleury.marc.go4lunch.api.UserHelper;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
+import com.fleury.marc.go4lunch.models.User;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
 
-    private TextView name, address, likeText;
-    private ImageView call, like, website;
-    private RatingBar rating;
+    @BindView(R.id.detail_name) TextView name;
+    @BindView(R.id.detail_address) TextView address;
+    @BindView(R.id.detail_like_text) TextView likeText;
+    @BindView(R.id.detail_call_image) ImageView call;
+    @BindView(R.id.detail_like_image) ImageView like;
+    @BindView(R.id.detail_website_image) ImageView website;
+    @BindView(R.id.detail_rating) RatingBar rating;
 
     private String detailName, detailAddress, detailId, detailNumber, detailWebsite;
     private Float detailRating;
 
     private String restaurant;
 
+    @BindView(R.id.detail_recycler) RecyclerView recyclerView;
+    private List<User> UsersList;
+    private DetailAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
-        name = findViewById(R.id.detail_name);
-        address = findViewById(R.id.detail_address);
-        likeText = findViewById(R.id.detail_like_text);
-        rating = findViewById(R.id.detail_rating);
-        call = findViewById(R.id.detail_call_image);
-        like = findViewById(R.id.detail_like_image);
-        website = findViewById(R.id.detail_website_image);
+        ButterKnife.bind(this);
 
         call.setOnClickListener(this::onClick);
         like.setOnClickListener(this::onClick);
@@ -64,6 +68,7 @@ public class DetailActivity extends AppCompatActivity {
 
         updateRestaurant();
         updateDetail();
+        //configureRecyclerView();
     }
 
     private void updateRestaurant(){
@@ -139,5 +144,12 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
     }
+
+    /*private void configureRecyclerView() {
+        this.UsersList = new ArrayList<>();
+        this.adapter = new DetailAdapter(this);
+        this.recyclerView.setAdapter(this.adapter);
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }*/
 
 }
