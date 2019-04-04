@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/toggle/ic_star_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/maps/ic_restaurant_menu_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,12 +28,12 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="ffcb00" />
-                            <entry key="height" value="30" />
-                            <entry key="outputName" value="ic_star_yellow_30dp" />
+                            <entry key="color" value="ffffff" />
+                            <entry key="height" value="72" />
+                            <entry key="outputName" value="ic_restaurant_menu_white_72dp" />
                             <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="C:\Users\marc-" />
-                            <entry key="width" value="30" />
+                            <entry key="width" value="72" />
                           </map>
                         </option>
                       </PersistentState>
