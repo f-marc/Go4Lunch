@@ -1,5 +1,6 @@
 package com.fleury.marc.go4lunch.controllers.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,11 +16,17 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.fleury.marc.go4lunch.R;
 import com.fleury.marc.go4lunch.adapters.DetailAdapter;
 import com.fleury.marc.go4lunch.api.UserHelper;
 import com.fleury.marc.go4lunch.models.User;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -41,7 +48,7 @@ public class DetailActivity extends AppCompatActivity {
     private String restaurant;
 
     @BindView(R.id.detail_recycler) RecyclerView recyclerView;
-    private List<User> UsersList;
+    private List<User> usersList;
     private DetailAdapter adapter;
 
     @Override
@@ -68,7 +75,8 @@ public class DetailActivity extends AppCompatActivity {
 
         updateRestaurant();
         updateDetail();
-        //configureRecyclerView();
+        configureRecyclerView();
+        updateUsersList();
     }
 
     private void updateRestaurant(){
@@ -145,11 +153,32 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    /*private void configureRecyclerView() {
-        this.UsersList = new ArrayList<>();
-        this.adapter = new DetailAdapter(this);
+    private void configureRecyclerView() {
+        this.usersList = new ArrayList<>();
+        this.adapter = new DetailAdapter(this, Glide.with(this));
         this.recyclerView.setAdapter(this.adapter);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    }*/
+    }
+
+    private void updateUsersList() {
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(UserHelper.COLLECTION_NAME);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    // for (when "restaurant" == detailId)
+                    User users = snapshot.getValue(User.class);
+                    usersList.add(users);
+                }
+                adapter.setUsers(usersList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.i("OnCancelled", "Cancelled");
+            }
+        });
+    }
 
 }

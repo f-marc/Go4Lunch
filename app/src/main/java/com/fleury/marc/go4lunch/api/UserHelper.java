@@ -8,7 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class UserHelper {
 
-    private static final String COLLECTION_NAME = "users";
+    public static final String COLLECTION_NAME = "users";
 
     // --- COLLECTION REFERENCE ---
 
