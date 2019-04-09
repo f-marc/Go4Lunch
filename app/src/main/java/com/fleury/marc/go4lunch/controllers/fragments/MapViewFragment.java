@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.fleury.marc.go4lunch.api.UserHelper;
 import com.fleury.marc.go4lunch.controllers.activities.DetailActivity;
 import com.fleury.marc.go4lunch.R;
 import com.google.android.gms.location.FusedLocationProviderClient;

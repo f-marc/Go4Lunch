@@ -88,6 +88,7 @@ public class DetailActivity extends AppCompatActivity {
                     Log.d("TAG", "DocumentSnapshot data: " + document.getData().get("restaurant"));
                     if (document.getData().get("restaurant") != null) {
                         restaurant = document.getData().get("restaurant").toString();
+                        updateStar();
                     }
                 } else {
                     Log.d("TAG", "No such document");
@@ -107,8 +108,9 @@ public class DetailActivity extends AppCompatActivity {
 
         double doubleRating = (detailRating / 1.7);
         rating.setRating((float) doubleRating);
+    }
 
-        Log.d("TAGvalues", "restaurant = '" + restaurant + "' ; detailId = '" + detailId + "'");
+    private void updateStar() {
         if (restaurant.equals(detailId)) {
             Log.d("TAGbug", "==");
             like.setImageResource(R.drawable.ic_star_yellow_30dp);
