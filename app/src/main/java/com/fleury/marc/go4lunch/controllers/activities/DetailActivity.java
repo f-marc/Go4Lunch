@@ -48,7 +48,7 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detail_website_image) ImageView website;
     @BindView(R.id.detail_rating) RatingBar rating;
 
-    private String detailName, detailAddress, detailId, detailRestaurant, detailNumber, detailWebsite;
+    private String detailName, detailAddress, detailId, detailNumber, detailWebsite;
     private Float detailRating;
 
     private String restaurant;
@@ -148,6 +148,7 @@ public class DetailActivity extends AppCompatActivity {
                 Toast.makeText(this, "LIKED !", Toast.LENGTH_SHORT).show();
             }
             updateRestaurant();
+            updateUsersList();
         }
         else if(v == website){
             if (getIntent().getExtras().getString("detailWebsite") != null){
@@ -166,19 +167,14 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void updateUsersList() {
-
-        Query query = FirebaseFirestore.getInstance().collection(UserHelper.COLLECTION_NAME);
-
+        Query query = FirebaseFirestore.getInstance().collection(UserHelper.COLLECTION_NAME).whereEqualTo("restaurant", detailId);
         query.addSnapshotListener((snapshot, e) -> {
             if (e != null) {
                 // Handle error
                 return;
             }
-
-            // Convert query snapshot to a list of chats
             List<User> users = snapshot.toObjects(User.class);
             adapter.setUsers(users);
         });
     }
-
 }

@@ -17,6 +17,7 @@ import com.fleury.marc.go4lunch.R;
 import com.fleury.marc.go4lunch.adapters.WorkmatesAdapter;
 import com.fleury.marc.go4lunch.api.UserHelper;
 import com.fleury.marc.go4lunch.models.User;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -53,19 +54,14 @@ public class WorkmatesFragment extends Fragment {
     }
 
     private void updateUsersList() {
-
-        Query query = FirebaseFirestore.getInstance().collection(UserHelper.COLLECTION_NAME);
-
+        Query query = FirebaseFirestore.getInstance().collection(UserHelper.COLLECTION_NAME).whereGreaterThan("restaurant", "");
         query.addSnapshotListener((snapshot, e) -> {
             if (e != null) {
                 // Handle error
                 return;
             }
-
-            // Convert query snapshot to a list of chats
             List<User> users = snapshot.toObjects(User.class);
             adapter.setUsers(users);
         });
     }
-
 }
