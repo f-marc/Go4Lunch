@@ -2,6 +2,7 @@ package com.fleury.marc.go4lunch.controllers.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -139,9 +140,14 @@ public class MainActivity extends AppCompatActivity {
             userMail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
         }
 
-        if (FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() != null) {
+        if(!TextUtils.isEmpty(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString())){
             Glide.with(this)
                     .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(userImage);
+        } else {
+            Glide.with(this)
+                    .load(R.drawable.default_person)
                     .apply(RequestOptions.circleCropTransform())
                     .into(userImage);
         }
