@@ -173,8 +173,8 @@ public class DetailActivity extends AppCompatActivity {
                 // Handle error
                 return;
             }
-            List<User> users = snapshot.toObjects(User.class);
-            adapter.setUsers(users);
+            usersList = snapshot.toObjects(User.class);
+            adapter.setUsers(usersList);
         });
     }
 }

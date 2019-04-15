@@ -35,10 +35,15 @@ public class WorkmatesViewHolder extends RecyclerView.ViewHolder {
             this.itemText.setTextColor(Color.parseColor("#9D9D9D"));
             this.itemText.setTypeface(this.itemText.getTypeface(), Typeface.ITALIC);
         }
-        glide.load(itemImage)
-                .apply(RequestOptions.circleCropTransform())
-                .into(this.itemImage);
-
+        if(!TextUtils.isEmpty(itemImage)){
+            glide.load(itemImage)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(this.itemImage);
+        } else {
+            glide.load(R.drawable.default_person)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(this.itemImage);
+        }
     }
 
 }

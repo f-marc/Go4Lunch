@@ -1,5 +1,6 @@
 package com.fleury.marc.go4lunch.views;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,9 +27,15 @@ public class DetailViewHolder extends RecyclerView.ViewHolder {
     public void updateWithUser(String itemImage, String itemName, RequestManager glide){
 
         this.itemName.setText(itemName + " is joining!");
-        glide.load(itemImage)
-                .apply(RequestOptions.circleCropTransform())
-                .into(this.itemImage);
+        if(!TextUtils.isEmpty(itemImage)){
+            glide.load(itemImage)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(this.itemImage);
+        } else {
+            glide.load(R.drawable.default_person)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(this.itemImage);
+        }
     }
 
 }
