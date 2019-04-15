@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 import com.fleury.marc.go4lunch.R;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,8 +26,9 @@ public class DetailViewHolder extends RecyclerView.ViewHolder {
     public void updateWithUser(String itemImage, String itemName, RequestManager glide){
 
         this.itemName.setText(itemName + " is joining!");
-        glide.load(itemImage).into(this.itemImage);
-
+        glide.load(itemImage)
+                .apply(RequestOptions.circleCropTransform())
+                .into(this.itemImage);
     }
 
 }

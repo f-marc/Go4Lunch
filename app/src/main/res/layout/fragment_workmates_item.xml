@@ -23,6 +23,8 @@
             android:id="@+id/workmates_item_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             app:layout_constraintStart_toEndOf="@id/workmates_item_image"
             app:layout_constraintTop_toTopOf="@id/workmates_item_image"
             app:layout_constraintBottom_toBottomOf="@id/workmates_item_image"

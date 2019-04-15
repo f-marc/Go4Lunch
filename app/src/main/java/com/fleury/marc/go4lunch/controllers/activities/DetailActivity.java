@@ -1,6 +1,7 @@
 package com.fleury.marc.go4lunch.controllers.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +29,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,7 +103,6 @@ public class DetailActivity extends AppCompatActivity {
                 Log.d("TAG", "Get failed with ", task.getException());
             }
         });
-        Log.d("TAGresto", restaurant);
     }
 
     private void updateDetail(){
@@ -112,11 +117,9 @@ public class DetailActivity extends AppCompatActivity {
 
     private void updateStar() {
         if (restaurant.equals(detailId)) {
-            Log.d("TAGbug", "==");
             like.setImageResource(R.drawable.ic_star_yellow_30dp);
             likeText.setText(R.string.liked);
         } else {
-            Log.d("TAGbug", "!=");
             like.setImageResource(R.drawable.ic_star_orange_30dp);
             likeText.setText(R.string.like);
         }
@@ -132,13 +135,11 @@ public class DetailActivity extends AppCompatActivity {
         }
         else if(v == like){
             if (restaurant.equals(detailId)){
-                Log.d("TAGboucle", "==");
                 UserHelper.updateRestaurant(null, FirebaseAuth.getInstance().getUid());
                 like.setImageResource(R.drawable.ic_star_orange_30dp);
                 likeText.setText(R.string.like);
                 Toast.makeText(this, "UNLIKED !", Toast.LENGTH_SHORT).show();
             } else {
-                Log.d("TAGboucle", "!=");
                 UserHelper.updateRestaurant(detailId, FirebaseAuth.getInstance().getUid());
                 like.setImageResource(R.drawable.ic_star_yellow_30dp);
                 likeText.setText(R.string.liked);
@@ -164,22 +165,17 @@ public class DetailActivity extends AppCompatActivity {
 
     private void updateUsersList() {
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(UserHelper.COLLECTION_NAME);
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    // for (when "restaurant" == detailId)
-                    User users = snapshot.getValue(User.class);
-                    usersList.add(users);
-                }
-                adapter.setUsers(usersList);
+        Query query = FirebaseFirestore.getInstance().collection(UserHelper.COLLECTION_NAME);
+
+        query.addSnapshotListener((snapshot, e) -> {
+            if (e != null) {
+                // Handle error
+                return;
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.i("OnCancelled", "Cancelled");
-            }
+            // Convert query snapshot to a list of chats
+            List<User> users = snapshot.toObjects(User.class);
+            adapter.setUsers(users);
         });
     }
 

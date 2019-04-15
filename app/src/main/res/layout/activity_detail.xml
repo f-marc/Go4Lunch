@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".controllers.activities.DetailActivity"
-    app:layout_constraintVertical_weight="10">
+    app:layout_constraintVertical_weight="11">
 
     <ImageView
         android:id="@+id/detail_image"
@@ -140,7 +140,6 @@
             android:textSize="17sp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/detail_recycler"
         android:layout_width="match_parent"
@@ -152,7 +151,6 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
     </androidx.recyclerview.widget.RecyclerView>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
