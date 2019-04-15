@@ -39,7 +39,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/detail_info"
             android:text="Restaurant"
-            android:textColor="@color/colorHamburger"
+            android:textColor="@color/colorWhite"
             android:textSize="22sp"/>
 
         <TextView
@@ -49,7 +49,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/detail_name"
             android:text="Address"
-            android:textColor="@color/colorHamburger"
+            android:textColor="@color/colorWhite"
             android:textSize="14sp" />
 
         <RatingBar
@@ -138,6 +138,18 @@
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"
             android:textSize="17sp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_buttons">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorVeryLightGray" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView

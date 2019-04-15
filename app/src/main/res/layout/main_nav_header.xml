@@ -19,8 +19,9 @@
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="@string/app_name"
         android:textStyle="bold"
+        android:typeface="monospace"
         android:textSize="36sp"
-        android:textColor="@color/colorHamburger" />
+        android:textColor="@color/colorWhite" />
 
     <ImageView
         android:id="@+id/nav_header_user_image"
@@ -44,7 +45,7 @@
         android:text="@string/nav_header_title"
         android:textStyle="bold"
         android:textSize="16sp"
-        android:textColor="@color/colorHamburger" />
+        android:textColor="@color/colorWhite" />
 
     <TextView
         android:id="@+id/nav_header_user_mail"
@@ -58,6 +59,6 @@
         android:paddingTop="5dp"
         android:text="@string/nav_header_subtitle"
         android:textSize="14sp"
-        android:textColor="@color/colorHamburger" />
+        android:textColor="@color/colorWhite" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

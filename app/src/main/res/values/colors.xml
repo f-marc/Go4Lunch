@@ -4,11 +4,12 @@
     <color name="colorPrimaryDark">#C41C00</color>
     <color name="colorAccent">#FFCB00</color>
 
-    <color name="colorDrawerBackground">#FF8A50</color>
-    <color name="colorHamburger">#FFFFFF</color>
+    <color name="colorPrimaryLight">#FF8A50</color>
+    <color name="colorWhite">#FFFFFF</color>
 
-    <color name="textBlack">#000000</color>
-    <color name="textGray">#4A4A4A</color>
-    <color name="textLightGray">#9D9D9D</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorGray">#4A4A4A</color>
+    <color name="colorLightGray">#9D9D9D</color>
+    <color name="colorVeryLightGray">#DFDFDF</color>
 
 </resources>

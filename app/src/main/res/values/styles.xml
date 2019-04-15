@@ -11,7 +11,7 @@
 
     <!-- Hamburger color -->
     <style name="DrawerIcon" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="color">@color/colorHamburger</item>
+        <item name="color">@color/colorWhite</item>
     </style>
 
     <!-- STYLE SIGN-IN ACTIVITY -->
