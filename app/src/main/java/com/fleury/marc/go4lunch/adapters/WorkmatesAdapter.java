@@ -50,7 +50,7 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesViewHolder> 
 
         String name = user.getUsername();
         String image = user.getUrlPicture();
-        String restaurant = user.getRestaurant();
+        String restaurant = user.getRestaurantName();
 
         viewHolder.updateWithWorkmates(image, name, restaurant, this.glide);
     }

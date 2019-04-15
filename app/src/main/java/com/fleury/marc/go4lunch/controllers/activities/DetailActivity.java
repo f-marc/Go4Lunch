@@ -48,7 +48,7 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detail_website_image) ImageView website;
     @BindView(R.id.detail_rating) RatingBar rating;
 
-    private String detailName, detailAddress, detailId, detailNumber, detailWebsite;
+    private String detailName, detailAddress, detailId, detailRestaurant, detailNumber, detailWebsite;
     private Float detailRating;
 
     private String restaurant;
@@ -136,11 +136,13 @@ public class DetailActivity extends AppCompatActivity {
         else if(v == like){
             if (restaurant.equals(detailId)){
                 UserHelper.updateRestaurant(null, FirebaseAuth.getInstance().getUid());
+                UserHelper.updateRestaurantName(null, FirebaseAuth.getInstance().getUid());
                 like.setImageResource(R.drawable.ic_star_orange_30dp);
                 likeText.setText(R.string.like);
                 Toast.makeText(this, "UNLIKED !", Toast.LENGTH_SHORT).show();
             } else {
                 UserHelper.updateRestaurant(detailId, FirebaseAuth.getInstance().getUid());
+                UserHelper.updateRestaurantName(detailName, FirebaseAuth.getInstance().getUid());
                 like.setImageResource(R.drawable.ic_star_yellow_30dp);
                 likeText.setText(R.string.liked);
                 Toast.makeText(this, "LIKED !", Toast.LENGTH_SHORT).show();

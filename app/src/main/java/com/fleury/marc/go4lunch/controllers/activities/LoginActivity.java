@@ -28,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
     private String mail;
     private String username;
     private String restaurant;
+    private String restaurantName;
     private String urlPicture;
 
     @Override
@@ -88,13 +89,14 @@ public class LoginActivity extends AppCompatActivity {
         mail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         restaurant = null;
+        restaurantName = null;
         if (FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() != null) {
             urlPicture = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
         } else {
             urlPicture = null;
         }
 
-        UserHelper.createUser(uid, mail, username, restaurant, urlPicture);
+        UserHelper.createUser(uid, mail, username, restaurant, restaurantName, urlPicture);
     }
 
     // --------------------
