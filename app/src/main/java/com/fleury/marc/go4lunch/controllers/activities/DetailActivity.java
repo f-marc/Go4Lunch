@@ -174,6 +174,7 @@ public class DetailActivity extends AppCompatActivity {
                 return;
             }
             usersList = snapshot.toObjects(User.class);
+            Log.i("taille", "" + usersList.size());
             adapter.setUsers(usersList);
         });
     }
