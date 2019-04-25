@@ -35,6 +35,11 @@
     <string name="liked">LIKED</string>
     <string name="website">WEBSITE</string>
 
+    <!-- SETTINGS ACTIVITY -->
+    <string name="edit">EDIT</string>
+    <string name="username">Username :</string>
+    <string name="notifications">Notifications ON/OFF</string>
+
     <string name="hello_blank_fragment">HELLO</string>
 </resources>
 

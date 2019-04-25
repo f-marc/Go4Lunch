@@ -35,10 +35,10 @@
         </activity>
         <activity android:name=".controllers.activities.LoginActivity" />
         <activity android:name=".controllers.activities.MainActivity" />
+        <activity android:name=".controllers.activities.DetailActivity" />
         <activity
             android:name=".controllers.activities.SettingsActivity"
             android:parentActivityName=".controllers.activities.MainActivity" />
-        <activity android:name=".controllers.activities.DetailActivity"></activity>
     </application>
 
 </manifest>
