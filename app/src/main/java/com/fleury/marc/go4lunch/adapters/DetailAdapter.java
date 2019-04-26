@@ -49,7 +49,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailViewHolder> {
         final int itemPos = position;
         final User user = usersList.get(position);
 
-        String name = user.getUsername();
+        String name = context.getString(R.string.joining, user.getUsername());
         String image = user.getUrlPicture();
 
         viewHolder.updateWithUser(image, name, this.glide);

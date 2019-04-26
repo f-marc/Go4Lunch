@@ -26,7 +26,7 @@ public class DetailViewHolder extends RecyclerView.ViewHolder {
 
     public void updateWithUser(String itemImage, String itemName, RequestManager glide){
 
-        this.itemName.setText(itemName + " is joining!");
+        this.itemName.setText(itemName);
         if(!TextUtils.isEmpty(itemImage)){
             glide.load(itemImage)
                     .apply(RequestOptions.circleCropTransform())

@@ -8,16 +8,18 @@
 
     <string name="search">Search</string>
     <string name="action_settings">Settings</string>
+
+    <!-- NAVIGATION DRAWER -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
-
     <string name="nav_lunch">YOUR LUNCH</string>
     <string name="nav_settings">SETTINGS</string>
     <string name="nav_logout">LOGOUT</string>
 
+    <!-- LOGIN ACTIVITY -->
     <string name="login">CONNEXION</string>
 
     <!-- SnackBar -->
@@ -38,6 +40,7 @@
     <string name="like">LIKE</string>
     <string name="liked">LIKED</string>
     <string name="website">WEBSITE</string>
+    <string name="joining">%s is joining!</string>
 
     <!-- SETTINGS ACTIVITY -->
     <string name="edit">EDIT</string>
@@ -45,8 +48,8 @@
     <string name="notifications">Notifications ON/OFF</string>
 
     <string name="distance">%sm</string>
-
-    <string name="hello_blank_fragment">HELLO</string>
+    <string name="yesEating">%1$s is eating at %2$s</string>
+    <string name="noEating">%s hasn\'t decided yet</string>
 </resources>
 
 

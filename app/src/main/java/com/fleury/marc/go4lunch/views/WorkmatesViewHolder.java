@@ -26,12 +26,12 @@ public class WorkmatesViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    public void updateWithWorkmates(String itemImage, String itemName, String itemRestaurant, RequestManager glide){
+    public void updateWithWorkmates(String itemImage, String itemRestaurant, String yesEating, String noEating, RequestManager glide){
 
         if(!TextUtils.isEmpty(itemRestaurant)) {
-            this.itemText.setText(itemName + " is eating at " + itemRestaurant);
+            this.itemText.setText(yesEating);
         } else {
-            this.itemText.setText(itemName + " hasn't decided yet");
+            this.itemText.setText(noEating);
             this.itemText.setTextColor(Color.parseColor("#9D9D9D"));
             this.itemText.setTypeface(this.itemText.getTypeface(), Typeface.ITALIC);
         }

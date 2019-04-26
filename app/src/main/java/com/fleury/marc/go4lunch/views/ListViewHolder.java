@@ -21,9 +21,6 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
     private TextView itemHours;
     private TextView itemDistance;
     private RatingBar itemRating;
-    private float[] result = new float[1];
-
-    private SharedPreferences pref;
 
     public ListViewHolder(View itemView) {
         super(itemView);
@@ -33,8 +30,6 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
         itemHours = itemView.findViewById(R.id.item_hours);
         itemDistance = itemView.findViewById(R.id.item_distance);
         itemRating = itemView.findViewById(R.id.item_rating);
-
-        pref = itemName.getContext().getSharedPreferences("pref", Context.MODE_PRIVATE);
     }
 
     public void updateWithPlace(String itemName, String itemAddress, String itemHours, Float itemRating, String distance){
