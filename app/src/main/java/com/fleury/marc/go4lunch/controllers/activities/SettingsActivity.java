@@ -5,21 +5,35 @@ import androidx.appcompat.widget.Toolbar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.fleury.marc.go4lunch.R;
 import com.fleury.marc.go4lunch.api.UserHelper;
+import com.fleury.marc.go4lunch.utils.AlarmReceiver;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+
+import java.util.Calendar;
 
 public class SettingsActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
+    private AlarmManager alarmMgr;
+    private PendingIntent alarmIntent;
+    private SharedPreferences mPreferences;
+
     @BindView(R.id.settings_name_edit) EditText mEditText;
     @BindView(R.id.settings_name_button) Button mButton;
     @BindView(R.id.settings_switch_button) Switch mSwitch;
@@ -30,21 +44,49 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);
 
+        mPreferences = this.getSharedPreferences("pref", MODE_PRIVATE);
+
         mButton.setOnClickListener(this::onClick);
-        mSwitch.setOnClickListener(this::onClick);
 
         configureToolbar();
         configureEditText();
+        updateSwitch();
     }
 
     public void onClick(View v) {
         if (v == mButton) {
             UserHelper.updateUsername(mEditText.getText().toString(), FirebaseAuth.getInstance().getUid());
         }
+    }
 
-        if (v == mSwitch) {
+    private void updateSwitch() {
+        mSwitch.setChecked(mPreferences.getBoolean("switchCheck", false));
 
-        }
+        mSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if(isChecked) {
+                alarmMgr = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+                Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
+                alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
+                // Set the alarm to start at 12:00 p.m.
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(System.currentTimeMillis());
+                calendar.set(Calendar.HOUR_OF_DAY, 12);
+                // Set the alarm to repeat everyday
+                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
+
+                mPreferences.edit().putBoolean("switchCheck", true).apply();
+                Toast.makeText(getApplicationContext(), "Notifications ON", Toast.LENGTH_SHORT).show();
+            } else {
+                alarmMgr = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+                Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
+                alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
+                alarmMgr.cancel(alarmIntent);
+
+                mPreferences.edit().putBoolean("switchCheck", false).apply();
+                Toast.makeText(getApplicationContext(), "Notifications OFF", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     //----------------------

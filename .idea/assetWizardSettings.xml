@@ -28,12 +28,11 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="ffffff" />
-                            <entry key="height" value="72" />
-                            <entry key="outputName" value="ic_restaurant_menu_white_72dp" />
+                            <entry key="height" value="48" />
+                            <entry key="outputName" value="ic_restaurant_menu_black_48dp" />
                             <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="C:\Users\marc-" />
-                            <entry key="width" value="72" />
+                            <entry key="width" value="48" />
                           </map>
                         </option>
                       </PersistentState>
