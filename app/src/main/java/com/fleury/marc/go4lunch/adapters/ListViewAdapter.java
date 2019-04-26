@@ -1,6 +1,7 @@
 package com.fleury.marc.go4lunch.adapters;
 
 import android.content.Context;
+import android.location.Location;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import com.fleury.marc.go4lunch.R;
 import com.fleury.marc.go4lunch.views.ListViewHolder;
 import com.google.android.libraries.places.compat.Place;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +23,7 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
 
     private double lat;
     private double lng;
+    private float[] result = new float[1];
 
     public ListViewAdapter(Context ctx, double lat, double lng) {
         context = ctx;
@@ -57,7 +61,12 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
         double latitude = place.getLatLng().latitude;
         double longitude = place.getLatLng().longitude;
 
-        viewHolder.updateWithPlace(name, address, phone, rating, lat, lng, latitude, longitude);
+        Location.distanceBetween(lat, lng, latitude, longitude, result);
+        DecimalFormat df = new DecimalFormat("#");
+        df.setRoundingMode(RoundingMode.HALF_UP);
+        String distance = context.getString(R.string.distance, df.format(result[0]));
+
+        viewHolder.updateWithPlace(name, address, phone, rating, distance);
     }
 
     @Override
