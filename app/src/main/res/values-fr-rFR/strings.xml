@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_map">Carte</string>
+    <string name="title_list">Liste</string>
+    <string name="title_workmates">Collègues</string>
+    <string name="search">Chercher</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="navigation_drawer_open">Ouvrir le menu de navigation</string>
+    <string name="navigation_drawer_close">Fermer le menu de navigation</string>
+    <string name="nav_lunch">VOTRE REPAS</string>
+    <string name="nav_settings">PARAMÈTRES</string>
+    <string name="nav_logout">DÉCONNEXION</string>
+    <string name="login">CONNEXON</string>
+    <string name="error_authentication_canceled">Authentification annulée</string>
+    <string name="error_no_internet">Erreur : pas de connexion internet</string>
+    <string name="error_unknown_error">Erreur inconnue</string>
+    <string name="call">APPEL</string>
+    <string name="like">AIME</string>
+    <string name="liked">AIMÉ</string>
+    <string name="website">SITE WEB</string>
+    <string name="edit">MODIFIER</string>
+    <string name="username">Pseudonyme :</string>
+    <string name="notifications">Notifications ON/OFF</string>
+    <string name="distance">%sm</string>
+    <string name="yesEating">%1$s mange à %2$s</string>
+    <string name="noEating">%s n\'a pas encore décidé</string>
+    <string name="joining">%s a rejoint !</string>
+    <string name="nav_header_desc">En-tête de navigation</string>
+</resources>
