@@ -11,6 +11,7 @@ import com.fleury.marc.go4lunch.models.User;
 import com.fleury.marc.go4lunch.views.DetailViewHolder;
 import com.google.android.libraries.places.compat.Place;
 
+import java.util.Collections;
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +29,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailViewHolder> {
 
     public void setUsers(List<User> user) {
         this.usersList = user;
+        Collections.sort(usersList, (o1, o2) -> o1.getUsername().compareToIgnoreCase(o2.getUsername()));
         notifyDataSetChanged();
     }
 
@@ -46,7 +48,6 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailViewHolder> {
 
     @Override
     public void onBindViewHolder(DetailViewHolder viewHolder, int position) {
-        final int itemPos = position;
         final User user = usersList.get(position);
 
         String name = context.getString(R.string.joining, user.getUsername());

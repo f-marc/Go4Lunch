@@ -109,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.nav_settings:
                     Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivity(settingsIntent);
-                    finish();
                     break;
                 case R.id.nav_logout:
                     FirebaseAuth.getInstance().signOut();

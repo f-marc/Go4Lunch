@@ -10,6 +10,8 @@ import com.fleury.marc.go4lunch.R;
 import com.fleury.marc.go4lunch.models.User;
 import com.fleury.marc.go4lunch.views.WorkmatesViewHolder;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,7 +28,17 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesViewHolder> 
     }
 
     public void setUsers(List<User> user) {
+
         this.usersList = user;
+        Collections.sort(usersList, (o1, o2) -> o1.getUsername().compareToIgnoreCase(o2.getUsername()));
+        Collections.sort(usersList, (o1, o2) -> {
+            if (o1.getRestaurant() == null && o2.getRestaurant() != null){
+                return 1;
+            } else if (o1.getRestaurant() != null && o2.getRestaurant() == null) {
+                return -1;
+            }
+            return 0;
+        });
         notifyDataSetChanged();
     }
 
@@ -45,7 +57,6 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesViewHolder> 
 
     @Override
     public void onBindViewHolder(WorkmatesViewHolder viewHolder, int position) {
-        final int itemPos = position;
         final User user = usersList.get(position);
 
         String name = user.getUsername();
