@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fleury.marc.go4lunch.R;
@@ -37,6 +38,7 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.settings_name_edit) EditText mEditText;
     @BindView(R.id.settings_name_button) Button mButton;
     @BindView(R.id.settings_switch_button) Switch mSwitch;
+    @BindView(R.id.settings_switch_text) TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class SettingsActivity extends AppCompatActivity {
         configureToolbar();
         configureEditText();
         updateSwitch();
+        updateTextView();
     }
 
     public void onClick(View v) {
@@ -75,7 +78,6 @@ public class SettingsActivity extends AppCompatActivity {
                 alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
 
                 mPreferences.edit().putBoolean("switchCheck", true).apply();
-                Toast.makeText(getApplicationContext(), "Notifications ON", Toast.LENGTH_SHORT).show();
             } else {
                 alarmMgr = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
                 Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
@@ -83,10 +85,17 @@ public class SettingsActivity extends AppCompatActivity {
                 alarmMgr.cancel(alarmIntent);
 
                 mPreferences.edit().putBoolean("switchCheck", false).apply();
-                Toast.makeText(getApplicationContext(), "Notifications OFF", Toast.LENGTH_SHORT).show();
             }
+            updateTextView();
         });
+    }
 
+    private void updateTextView() {
+        if(mPreferences.getBoolean("switchCheck", false)) {
+            mTextView.setText(getString(R.string.notifications, getString(R.string.on)));
+        } else {
+            mTextView.setText(getString(R.string.notifications, getString(R.string.off)));
+        }
     }
 
     //----------------------
@@ -96,7 +105,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void configureToolbar() {
         this.toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Settings");
+        getSupportActionBar().setTitle(getString(R.string.settings));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

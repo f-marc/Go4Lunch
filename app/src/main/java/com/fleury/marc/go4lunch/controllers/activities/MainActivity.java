@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //Inflate the navigationPage and add it to the Toolbar
-
         getMenuInflater().inflate(R.menu.activity_main_toolbar, menu);
         return true;
     }

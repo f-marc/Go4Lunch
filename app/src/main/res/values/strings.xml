@@ -8,7 +8,6 @@
     <string name="title_list">List View</string>
     <string name="title_workmates">Workmates</string>
     <string name="search">Search</string>
-    <string name="action_settings">Settings</string>
     <string name="distance">%sm</string>
     <string name="yesEating">%1$s is eating at %2$s</string>
     <string name="noEating">%s hasn\'t decided yet</string>
@@ -21,7 +20,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="nav_lunch">YOUR LUNCH</string>
     <string name="nav_settings">SETTINGS</string>
-    <string name="nav_logout">LOGOUT</string>
+    <string name="nav_logout">LOG OUT</string>
 
     <!-- LOGIN ACTIVITY -->
     <string name="login">LOG IN</string>
@@ -39,9 +38,12 @@
     <string name="joining">%s is joining!</string>
 
     <!-- SETTINGS ACTIVITY -->
+    <string name="settings">Settings</string>
     <string name="edit">EDIT</string>
     <string name="username">Username :</string>
-    <string name="notifications">Notifications ON/OFF</string>
+    <string name="notifications">Notifications %s</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
 
     <!-- FACEBOOK -->
     <string name="facebook_application_id" translatable="false">283394502353733</string>
