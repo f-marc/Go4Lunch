@@ -11,7 +11,6 @@ import com.fleury.marc.go4lunch.models.User;
 import com.fleury.marc.go4lunch.views.WorkmatesViewHolder;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;

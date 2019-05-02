@@ -9,7 +9,6 @@ import com.bumptech.glide.RequestManager;
 import com.fleury.marc.go4lunch.R;
 import com.fleury.marc.go4lunch.models.User;
 import com.fleury.marc.go4lunch.views.DetailViewHolder;
-import com.google.android.libraries.places.compat.Place;
 
 import java.util.Collections;
 import java.util.List;
