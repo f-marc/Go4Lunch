@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="title_Bar">J\'ai Faim !</string>
     <string name="title_map">Carte</string>
     <string name="title_list">Liste</string>
     <string name="title_workmates">Collègues</string>

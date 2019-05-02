@@ -3,7 +3,6 @@ package com.fleury.marc.go4lunch.controllers.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private View headerView;
+    private int navigationPage;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = item -> {
@@ -40,14 +40,20 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.navigation_map:
                         MapViewFragment mapFrag = new MapViewFragment();
                         getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, mapFrag).commit();
+                        this.navigationPage = 1;
+                        invalidateOptionsMenu();
                         return true;
                     case R.id.navigation_list:
                         ListViewFragment listFrag = new ListViewFragment();
                         getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, listFrag).commit();
+                        this.navigationPage = 2;
+                        invalidateOptionsMenu();
                         return true;
                     case R.id.navigation_workmates:
                         WorkmatesFragment workmatesFrag = new WorkmatesFragment();
                         getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, workmatesFrag).commit();
+                        this.navigationPage = 3;
+                        invalidateOptionsMenu();
                         return true;
                 }
                 return false;
@@ -71,8 +77,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //Inflate the menu and add it to the Toolbar
+        //Inflate the navigationPage and add it to the Toolbar
+
         getMenuInflater().inflate(R.menu.activity_main_toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if (this.navigationPage == 3) {
+            menu.findItem(R.id.activity_main_search).setVisible(false);
+        } else {
+            menu.findItem(R.id.activity_main_search).setVisible(true);
+        }
         return true;
     }
 
@@ -83,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
     private void configureToolbar() {
         this.toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("I'm Hungry!");
+        getSupportActionBar().setTitle(getString(R.string.title_Bar));
     }
 
     private void configureDrawerLayout() {
@@ -158,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //Handle actions on menu items
+        //Handle actions on navigationPage items
         switch (item.getItemId()) {
             case R.id.activity_main_search:
                 Toast.makeText(getApplicationContext(), "Search Button", Toast.LENGTH_SHORT).show();

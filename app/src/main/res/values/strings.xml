@@ -3,6 +3,7 @@
     <string name="app_name" translatable="false">Go4Lunch</string>
 
     <!-- MAIN ACTIVITY -->
+    <string name="title_Bar">I\'m Hungry!</string>
     <string name="title_map">Map View</string>
     <string name="title_list">List View</string>
     <string name="title_workmates">Workmates</string>
