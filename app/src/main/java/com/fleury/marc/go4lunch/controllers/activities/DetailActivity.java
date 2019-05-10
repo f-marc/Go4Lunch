@@ -18,10 +18,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.fleury.marc.go4lunch.R;
 import com.fleury.marc.go4lunch.adapters.DetailAdapter;
+import com.fleury.marc.go4lunch.api.RestaurantHelper;
 import com.fleury.marc.go4lunch.api.UserHelper;
 import com.fleury.marc.go4lunch.models.User;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -42,6 +45,7 @@ public class DetailActivity extends AppCompatActivity {
     private Float detailRating;
 
     private String restaurant;
+    private ArrayList<String> users;
 
     @BindView(R.id.detail_recycler) RecyclerView recyclerView;
     private List<User> usersList;
@@ -69,13 +73,13 @@ public class DetailActivity extends AppCompatActivity {
             detailWebsite = getIntent().getExtras().getString("detailWebsite");
         }
 
-        updateRestaurant();
+        updateCurrentRestaurant();
         updateDetail();
         configureRecyclerView();
         updateUsersList();
     }
 
-    private void updateRestaurant(){
+    private void updateCurrentRestaurant(){
         restaurant = "";
         UserHelper.getUser(FirebaseAuth.getInstance().getUid()).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -115,6 +119,32 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
+    // NE FONCTIONNE PAS ENCORE. À TESTER AVEC DES LOGS
+    // À RÉGLER : UN MÊME USER PEUT SE RETROUVER DANS PLUSIEURS RESTO À LA FOIS
+    private void updateRestaurantLike() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection(RestaurantHelper.COLLECTION_RESTAURANTS).document(detailId);
+        RestaurantHelper.getRestaurant(detailId).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    docRef.update("users", FieldValue.arrayUnion(FirebaseAuth.getInstance().getUid()));
+                }
+                else {
+                    users.add(FirebaseAuth.getInstance().getUid());
+                    RestaurantHelper.createRestaurant(detailId, users);
+                }
+            }
+        });
+    }
+
+    private void updateRestaurantUnlike() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection(RestaurantHelper.COLLECTION_RESTAURANTS).document(detailId);
+        docRef.update("users", FieldValue.arrayRemove(FirebaseAuth.getInstance().getUid()));
+        // SI L'ARRAYLIST DEVIENT VIDE, ON SUPPRIME LE DOCUMENT ENTIER
+    }
+
     public void onClick(View v) {
         if(v == call){
             if (getIntent().getExtras().getString("detailNumber") != null){
@@ -129,15 +159,17 @@ public class DetailActivity extends AppCompatActivity {
                 UserHelper.updateRestaurantName(null, FirebaseAuth.getInstance().getUid());
                 like.setImageResource(R.drawable.ic_star_orange_30dp);
                 likeText.setText(R.string.like);
+                updateRestaurantUnlike();
                 Toast.makeText(this, "UNLIKED !", Toast.LENGTH_SHORT).show();
             } else {
                 UserHelper.updateRestaurant(detailId, FirebaseAuth.getInstance().getUid());
                 UserHelper.updateRestaurantName(detailName, FirebaseAuth.getInstance().getUid());
                 like.setImageResource(R.drawable.ic_star_yellow_30dp);
                 likeText.setText(R.string.liked);
+                updateRestaurantLike();
                 Toast.makeText(this, "LIKED !", Toast.LENGTH_SHORT).show();
             }
-            updateRestaurant();
+            updateCurrentRestaurant();
             updateUsersList();
         }
         else if(v == website){
@@ -157,14 +189,13 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void updateUsersList() {
-        Query query = FirebaseFirestore.getInstance().collection(UserHelper.COLLECTION_NAME).whereEqualTo("restaurant", detailId);
+        Query query = FirebaseFirestore.getInstance().collection(UserHelper.COLLECTION_USERS).whereEqualTo("restaurant", detailId);
         query.addSnapshotListener((snapshot, e) -> {
             if (e != null) {
                 // Handle error
                 return;
             }
             usersList = snapshot.toObjects(User.class);
-            Log.i("taille", "" + usersList.size());
             adapter.setUsers(usersList);
         });
     }

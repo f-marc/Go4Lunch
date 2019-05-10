@@ -35,7 +35,7 @@ public class User {
     public void setMail(String mail) { this.mail = mail; }
     public void setUsername(String username) { this.username = username; }
     public void setRestaurant(String restaurant) { this.restaurant = restaurant; }
-    public void setRestaurantId(String restaurantName) { this.restaurantName = restaurantName; }
+    public void setRestaurantName(String restaurantName) { this.restaurantName = restaurantName; }
     public void setUrlPicture(String urlPicture) { this.urlPicture = urlPicture; }
 
 }

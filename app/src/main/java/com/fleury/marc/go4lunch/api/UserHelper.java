@@ -8,12 +8,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class UserHelper {
 
-    public static final String COLLECTION_NAME = "users";
+    public static final String COLLECTION_USERS = "users";
 
     // --- COLLECTION REFERENCE ---
 
     public static CollectionReference getUsersCollection(){
-        return FirebaseFirestore.getInstance().collection(COLLECTION_NAME);
+        return FirebaseFirestore.getInstance().collection(COLLECTION_USERS);
     }
 
     // --- CREATE ---

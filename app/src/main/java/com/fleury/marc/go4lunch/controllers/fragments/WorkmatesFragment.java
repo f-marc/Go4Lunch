@@ -11,12 +11,14 @@ import butterknife.ButterKnife;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.fleury.marc.go4lunch.R;
 import com.fleury.marc.go4lunch.adapters.WorkmatesAdapter;
 import com.fleury.marc.go4lunch.api.UserHelper;
 import com.fleury.marc.go4lunch.models.User;
+import com.fleury.marc.go4lunch.utils.ItemClickSupport;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -40,6 +42,7 @@ public class WorkmatesFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         configureRecyclerView();
+        configureOnClickRecyclerView();
         updateUsersList();
 
         return view;
@@ -52,8 +55,23 @@ public class WorkmatesFragment extends Fragment {
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
+    private void configureOnClickRecyclerView(){
+        ItemClickSupport.addTo(recyclerView, R.layout.fragment_workmates_item)
+                .setOnItemClickListener((recyclerView, position, v) -> {
+                    User user = adapter.getUsers(position);
+                    if (user.getRestaurant() != null) {
+                        //Intent detailActivityIntent = new Intent(getContext(), DetailActivity.class);
+                        //Bundle bundle = new Bundle();
+                        //bundle.putString("detailName", user.getRestaurant());
+                        //detailActivityIntent.putExtras(bundle);
+                        //startActivity(detailActivityIntent);
+                        Toast.makeText(getContext(), user.getUsername() + " eating at " + user.getRestaurant(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     private void updateUsersList() {
-        Query query = FirebaseFirestore.getInstance().collection(UserHelper.COLLECTION_NAME);
+        Query query = FirebaseFirestore.getInstance().collection(UserHelper.COLLECTION_USERS);
         query.addSnapshotListener((snapshot, e) -> {
             if (e != null) {
                 // Handle error
