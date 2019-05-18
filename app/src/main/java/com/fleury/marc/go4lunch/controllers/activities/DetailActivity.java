@@ -33,21 +33,28 @@ import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
 
-    @BindView(R.id.detail_name) TextView name;
-    @BindView(R.id.detail_address) TextView address;
-    @BindView(R.id.detail_like_text) TextView likeText;
-    @BindView(R.id.detail_call_image) ImageView call;
-    @BindView(R.id.detail_like_image) ImageView like;
-    @BindView(R.id.detail_website_image) ImageView website;
-    @BindView(R.id.detail_rating) RatingBar rating;
+    @BindView(R.id.detail_name)
+    TextView name;
+    @BindView(R.id.detail_address)
+    TextView address;
+    @BindView(R.id.detail_like_text)
+    TextView likeText;
+    @BindView(R.id.detail_call_image)
+    ImageView call;
+    @BindView(R.id.detail_like_image)
+    ImageView like;
+    @BindView(R.id.detail_website_image)
+    ImageView website;
+    @BindView(R.id.detail_rating)
+    RatingBar rating;
 
     private String detailName, detailAddress, detailId, detailNumber, detailWebsite;
     private Float detailRating;
 
     private String restaurant;
-    private ArrayList<String> users;
 
-    @BindView(R.id.detail_recycler) RecyclerView recyclerView;
+    @BindView(R.id.detail_recycler)
+    RecyclerView recyclerView;
     private List<User> usersList;
     private DetailAdapter adapter;
 
@@ -66,10 +73,10 @@ public class DetailActivity extends AppCompatActivity {
         detailId = getIntent().getExtras().getString("detailId");
         detailRating = getIntent().getExtras().getFloat("detailRating");
 
-        if (!TextUtils.isEmpty(getIntent().getExtras().getString("detailNumber"))){
+        if (!TextUtils.isEmpty(getIntent().getExtras().getString("detailNumber"))) {
             detailNumber = getIntent().getExtras().getString("detailNumber");
         }
-        if (!TextUtils.isEmpty(getIntent().getExtras().getString("detailWebsite"))){
+        if (!TextUtils.isEmpty(getIntent().getExtras().getString("detailWebsite"))) {
             detailWebsite = getIntent().getExtras().getString("detailWebsite");
         }
 
@@ -79,7 +86,7 @@ public class DetailActivity extends AppCompatActivity {
         updateUsersList();
     }
 
-    private void updateCurrentRestaurant(){
+    private void updateCurrentRestaurant() {
         restaurant = "";
         UserHelper.getUser(FirebaseAuth.getInstance().getUid()).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -99,7 +106,7 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
-    private void updateDetail(){
+    private void updateDetail() {
         name.setText(detailName);
 
         String subAddress = detailAddress.substring(0, detailAddress.indexOf(","));
@@ -119,18 +126,28 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    // NE FONCTIONNE PAS ENCORE. À TESTER AVEC DES LOGS
-    // À RÉGLER : UN MÊME USER PEUT SE RETROUVER DANS PLUSIEURS RESTO À LA FOIS
     private void updateRestaurantLike() {
+        // On supprime de Firebase l'ancien restaurant liké
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection(RestaurantHelper.COLLECTION_RESTAURANTS).document(detailId);
+        if (!TextUtils.isEmpty(restaurant)) {
+            RestaurantHelper.getRestaurant(restaurant).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        DocumentReference docRef = db.collection(RestaurantHelper.COLLECTION_RESTAURANTS).document(restaurant);
+                        docRef.update("users", FieldValue.arrayRemove(FirebaseAuth.getInstance().getUid()));
+                    }
+                }
+            });
+        }
         RestaurantHelper.getRestaurant(detailId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
+                if (document.exists()) { // Si le restaurant est déjà créé : on ajoute user à la liste
+                    DocumentReference docRef = db.collection(RestaurantHelper.COLLECTION_RESTAURANTS).document(detailId);
                     docRef.update("users", FieldValue.arrayUnion(FirebaseAuth.getInstance().getUid()));
-                }
-                else {
+                } else { // Si le restaurant n'est pas créé : on le crée et on ajoute user à la liste
+                    ArrayList<String> users = new ArrayList<>();
                     users.add(FirebaseAuth.getInstance().getUid());
                     RestaurantHelper.createRestaurant(detailId, users);
                 }
@@ -142,19 +159,17 @@ public class DetailActivity extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection(RestaurantHelper.COLLECTION_RESTAURANTS).document(detailId);
         docRef.update("users", FieldValue.arrayRemove(FirebaseAuth.getInstance().getUid()));
-        // SI L'ARRAYLIST DEVIENT VIDE, ON SUPPRIME LE DOCUMENT ENTIER
     }
 
     public void onClick(View v) {
-        if(v == call){
-            if (getIntent().getExtras().getString("detailNumber") != null){
+        if (v == call) {
+            if (getIntent().getExtras().getString("detailNumber") != null) {
                 Toast.makeText(this, detailNumber, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Aucun numéro de téléphone", Toast.LENGTH_SHORT).show();
             }
-        }
-        else if(v == like){
-            if (restaurant.equals(detailId)){
+        } else if (v == like) {
+            if (restaurant.equals(detailId)) {
                 UserHelper.updateRestaurant(null, FirebaseAuth.getInstance().getUid());
                 UserHelper.updateRestaurantName(null, FirebaseAuth.getInstance().getUid());
                 like.setImageResource(R.drawable.ic_star_orange_30dp);
@@ -171,9 +186,8 @@ public class DetailActivity extends AppCompatActivity {
             }
             updateCurrentRestaurant();
             updateUsersList();
-        }
-        else if(v == website){
-            if (getIntent().getExtras().getString("detailWebsite") != null){
+        } else if (v == website) {
+            if (getIntent().getExtras().getString("detailWebsite") != null) {
                 Toast.makeText(this, detailWebsite, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Aucun site internet", Toast.LENGTH_SHORT).show();
