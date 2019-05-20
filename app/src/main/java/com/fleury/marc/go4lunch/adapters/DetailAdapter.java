@@ -21,13 +21,13 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailViewHolder> {
     private Context context;
     private RequestManager glide;
 
-    public DetailAdapter(Context ctx, RequestManager glide) {
-        context = ctx;
+    public DetailAdapter(Context context, RequestManager glide) {
+        this.context = context;
         this.glide = glide;
     }
 
-    public void setUsers(List<User> user) {
-        this.usersList = user;
+    public void setUsers(List<User> userList) {
+        this.usersList = userList;
         Collections.sort(usersList, (o1, o2) -> o1.getUsername().compareToIgnoreCase(o2.getUsername()));
         notifyDataSetChanged();
     }

@@ -27,14 +27,14 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
     private float[] result1 = new float[1];
     private float[] result2 = new float[1];
 
-    public ListViewAdapter(Context ctx, double lat, double lng) {
-        context = ctx;
+    public ListViewAdapter(Context context, double lat, double lng) {
+        this.context = context;
         this.lat = lat;
         this.lng = lng;
     }
 
-    public void setPlaces(List<Place> list) {
-        this.placesList = list;
+    public void setPlaces(List<Place> placeList) {
+        this.placesList = placeList;
         Collections.sort(placesList, (o1, o2) -> {
             double latitude1 = o1.getLatLng().latitude;
             double longitude1 = o1.getLatLng().longitude;

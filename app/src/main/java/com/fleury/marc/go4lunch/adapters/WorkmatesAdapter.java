@@ -21,14 +21,14 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesViewHolder> 
     private Context context;
     private RequestManager glide;
 
-    public WorkmatesAdapter(Context ctx, RequestManager glide) {
-        context = ctx;
+    public WorkmatesAdapter(Context context, RequestManager glide) {
+        this.context = context;
         this.glide = glide;
     }
 
-    public void setUsers(List<User> user) {
+    public void setUsers(List<User> userList) {
 
-        this.usersList = user;
+        this.usersList = userList;
         Collections.sort(usersList, (o1, o2) -> o1.getUsername().compareToIgnoreCase(o2.getUsername()));
         Collections.sort(usersList, (o1, o2) -> {
             if (o1.getRestaurant() == null && o2.getRestaurant() != null){

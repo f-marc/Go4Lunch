@@ -54,6 +54,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
     private static final int LOC_REQ_CODE = 1;
+    private static final int restaurantPlace = 79;
 
     public static MapViewFragment newInstance() {
         return new MapViewFragment();
@@ -137,7 +138,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
             PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
             for (PlaceLikelihood placeLikelihood : likelyPlaces) {
                 Log.i("Map : onComplete", String.format("Place '%s' has likelihood: %g", placeLikelihood.getPlace().getPlaceTypes(), placeLikelihood.getLikelihood()));
-                if (placeLikelihood.getPlace().getPlaceTypes().contains(79)) {
+                if (placeLikelihood.getPlace().getPlaceTypes().contains(restaurantPlace)) {
                     googleMap.addMarker(new MarkerOptions()
                             .position(placeLikelihood.getPlace().getLatLng())
                             .title(placeLikelihood.getPlace().getName().toString())).setTag(placeLikelihood);

@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,6 +29,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -161,10 +165,12 @@ public class DetailActivity extends AppCompatActivity {
         docRef.update("users", FieldValue.arrayRemove(FirebaseAuth.getInstance().getUid()));
     }
 
-    public void onClick(View v) {
+    private void onClick(View v) {
         if (v == call) {
-            if (getIntent().getExtras().getString("detailNumber") != null) {
-                Toast.makeText(this, detailNumber, Toast.LENGTH_SHORT).show();
+            if (!TextUtils.isEmpty(detailNumber)) {
+                Intent phoneIntent = new Intent(Intent.ACTION_DIAL);
+                phoneIntent.setData(Uri.parse("tel:" + detailNumber));
+                startActivity(phoneIntent);
             } else {
                 Toast.makeText(this, "Aucun numéro de téléphone", Toast.LENGTH_SHORT).show();
             }
@@ -187,8 +193,12 @@ public class DetailActivity extends AppCompatActivity {
             updateCurrentRestaurant();
             updateUsersList();
         } else if (v == website) {
-            if (getIntent().getExtras().getString("detailWebsite") != null) {
-                Toast.makeText(this, detailWebsite, Toast.LENGTH_SHORT).show();
+            if (!TextUtils.isEmpty(detailWebsite)) {
+                if (!detailWebsite.startsWith("http://") && !detailWebsite.startsWith("https://")) {
+                    detailWebsite = "http://" + detailWebsite;
+                }
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(detailWebsite));
+                startActivity(browserIntent);
             } else {
                 Toast.makeText(this, "Aucun site internet", Toast.LENGTH_SHORT).show();
             }
