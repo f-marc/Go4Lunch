@@ -35,6 +35,11 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
 
     public void setPlaces(List<Place> placeList) {
         this.placesList = placeList;
+        sortingByDistance(placesList);
+        notifyDataSetChanged();
+    }
+
+    private void sortingByDistance(List<Place> placesList) {
         Collections.sort(placesList, (o1, o2) -> {
             double latitude1 = o1.getLatLng().latitude;
             double longitude1 = o1.getLatLng().longitude;
@@ -49,7 +54,6 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
             }
             return 0;
         });
-        notifyDataSetChanged();
     }
 
     public Place getPlaces(int position){

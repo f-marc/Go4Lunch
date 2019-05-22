@@ -37,20 +37,13 @@ import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
 
-    @BindView(R.id.detail_name)
-    TextView name;
-    @BindView(R.id.detail_address)
-    TextView address;
-    @BindView(R.id.detail_like_text)
-    TextView likeText;
-    @BindView(R.id.detail_call_image)
-    ImageView call;
-    @BindView(R.id.detail_like_image)
-    ImageView like;
-    @BindView(R.id.detail_website_image)
-    ImageView website;
-    @BindView(R.id.detail_rating)
-    RatingBar rating;
+    @BindView(R.id.detail_name) TextView name;
+    @BindView(R.id.detail_address) TextView address;
+    @BindView(R.id.detail_like_text) TextView likeText;
+    @BindView(R.id.detail_call_image) ImageView call;
+    @BindView(R.id.detail_like_image) ImageView like;
+    @BindView(R.id.detail_website_image) ImageView website;
+    @BindView(R.id.detail_rating) RatingBar rating;
 
     private String detailName, detailAddress, detailId, detailNumber, detailWebsite;
     private Float detailRating;

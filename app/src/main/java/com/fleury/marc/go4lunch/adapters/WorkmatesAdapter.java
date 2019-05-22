@@ -26,10 +26,19 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesViewHolder> 
         this.glide = glide;
     }
 
-    public void setUsers(List<User> userList) {
+    public void setUsers(List<User> usersList) {
 
-        this.usersList = userList;
+        this.usersList = usersList;
+        sortingAlphabetically(usersList);
+        sortingByRestaurant(usersList);
+        notifyDataSetChanged();
+    }
+
+    private void sortingAlphabetically(List<User> usersList) {
         Collections.sort(usersList, (o1, o2) -> o1.getUsername().compareToIgnoreCase(o2.getUsername()));
+    }
+
+    private void sortingByRestaurant(List<User> usersList) {
         Collections.sort(usersList, (o1, o2) -> {
             if (o1.getRestaurant() == null && o2.getRestaurant() != null){
                 return 1;
@@ -38,7 +47,6 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesViewHolder> 
             }
             return 0;
         });
-        notifyDataSetChanged();
     }
 
     public User getUsers(int position){
