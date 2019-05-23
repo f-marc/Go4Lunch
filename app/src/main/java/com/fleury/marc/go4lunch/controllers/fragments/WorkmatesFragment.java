@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +28,6 @@ import java.util.List;
 
 
 public class WorkmatesFragment extends Fragment {
-
-    public static WorkmatesFragment newInstance() {
-        return new WorkmatesFragment();
-    }
 
     @BindView(R.id.fragment_workmates_recycler) RecyclerView recyclerView;
     private List<User> usersList;
@@ -55,7 +52,7 @@ public class WorkmatesFragment extends Fragment {
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
-    private void configureOnClickRecyclerView(){
+    private void configureOnClickRecyclerView(){ // Click on RecyclerView's item
         ItemClickSupport.addTo(recyclerView, R.layout.fragment_workmates_item)
                 .setOnItemClickListener((recyclerView, position, v) -> {
                     User user = adapter.getUsers(position);
@@ -70,11 +67,11 @@ public class WorkmatesFragment extends Fragment {
                 });
     }
 
-    private void updateUsersList() {
+    private void updateUsersList() { // Display all the users
         Query query = FirebaseFirestore.getInstance().collection(UserHelper.COLLECTION_USERS);
         query.addSnapshotListener((snapshot, e) -> {
             if (e != null) {
-                // Handle error
+                Log.e("SnapShotListener", "Error: ", e);
                 return;
             }
             usersList = snapshot.toObjects(User.class);

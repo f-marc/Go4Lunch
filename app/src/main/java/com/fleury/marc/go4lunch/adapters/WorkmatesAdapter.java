@@ -27,7 +27,6 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesViewHolder> 
     }
 
     public void setUsers(List<User> usersList) {
-
         this.usersList = usersList;
         sortingAlphabetically(usersList);
         sortingByRestaurant(usersList);

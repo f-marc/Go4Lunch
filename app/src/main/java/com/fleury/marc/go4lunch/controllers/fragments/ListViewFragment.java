@@ -51,11 +51,7 @@ public class ListViewFragment extends Fragment {
     private double lat;
     private double lng;
 
-    Task<PlaceLikelihoodBufferResponse> placeResult;
-
-    public static ListViewFragment newInstance() {
-        return new ListViewFragment();
-    }
+    private static final int restaurantPlace = 79;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,14 +73,13 @@ public class ListViewFragment extends Fragment {
     }
 
     private void configureRecyclerView() {
-
         this.placesList = new ArrayList<>();
         this.adapter = new ListViewAdapter(getContext(), lat, lng);
         this.recyclerView.setAdapter(this.adapter);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
-    private void configureOnClickRecyclerView(){
+    private void configureOnClickRecyclerView(){ // Click on RecyclerView's item
         ItemClickSupport.addTo(recyclerView, R.layout.fragment_list_view_item)
                 .setOnItemClickListener((recyclerView, position, v) -> {
                     Place place = adapter.getPlaces(position);
@@ -106,6 +101,7 @@ public class ListViewFragment extends Fragment {
     }
 
     private void getCurrentPlaceItems() {
+        // Checking permissions
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOC_REQ_CODE);
         } else {
@@ -116,7 +112,7 @@ public class ListViewFragment extends Fragment {
 
     @SuppressLint("MissingPermission")
     private void getCurrentPlaceData() {
-        placeResult = placeDetectionClient.getCurrentPlace(null);
+        Task<PlaceLikelihoodBufferResponse> placeResult = placeDetectionClient.getCurrentPlace(null);
         placeResult.addOnFailureListener(task ->
                 Log.i("List : onFailure", "Fail")
         );
@@ -124,7 +120,7 @@ public class ListViewFragment extends Fragment {
         placeResult.addOnCompleteListener(task -> {
             PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
             for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                if (placeLikelihood.getPlace().getPlaceTypes().contains(79)) {
+                if (placeLikelihood.getPlace().getPlaceTypes().contains(restaurantPlace)) {
                     placesList.add(placeLikelihood.getPlace().freeze());
                 }
             }
@@ -141,6 +137,7 @@ public class ListViewFragment extends Fragment {
         }
     }
 
+    // Transform Long into Double
     private double getDouble(final SharedPreferences prefs, final String key, final double defaultValue) {
         return Double.longBitsToDouble(prefs.getLong(key, Double.doubleToLongBits(defaultValue)));
     }

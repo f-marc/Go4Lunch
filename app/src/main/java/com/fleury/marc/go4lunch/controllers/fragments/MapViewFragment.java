@@ -56,13 +56,10 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     private static final int LOC_REQ_CODE = 1;
     private static final int restaurantPlace = 79;
 
-    public static MapViewFragment newInstance() {
-        return new MapViewFragment();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map_view, container, false);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         ButterKnife.bind(this, view);
@@ -70,7 +67,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
         pref = getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
         editor = pref.edit();
 
-        client = LocationServices.getFusedLocationProviderClient(getContext());
+        client = LocationServices.getFusedLocationProviderClient(getActivity());
         placeDetectionClient = Places.getPlaceDetectionClient(getActivity());
 
         return view;
@@ -80,39 +77,17 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        // SET THE MAP STYLE
         try {
-            boolean success = googleMap.setMapStyle(
-                    MapStyleOptions.loadRawResourceStyle(
-                            getContext(), R.raw.style_json));
-
+            boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.style_json));
             if (!success) {
-                Log.e(TAG, "Style parsing failed.");
+                Log.e("MapStyle", "Style parsing failed.");
             }
         } catch (Resources.NotFoundException e) {
-            Log.e(TAG, "Can't find style. Error: ", e);
+            Log.e("MapStyle", "Can't find style. Error: ", e);
         }
 
-
-        googleMap.setOnMarkerClickListener(marker -> {
-            PlaceLikelihood resto = (PlaceLikelihood) marker.getTag();
-            Intent detailActivityIntent = new Intent(getContext(), DetailActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("detailName", resto.getPlace().getName().toString());
-            bundle.putString("detailAddress", resto.getPlace().getAddress().toString());
-            bundle.putFloat("detailRating", resto.getPlace().getRating());
-            bundle.putString("detailId", resto.getPlace().getId());
-            if (!TextUtils.isEmpty(resto.getPlace().getPhoneNumber())) {
-                bundle.putString("detailNumber", resto.getPlace().getPhoneNumber().toString());
-            }
-            if (resto.getPlace().getWebsiteUri() != null) {
-                bundle.putString("detailWebsite", resto.getPlace().getWebsiteUri().toString());
-            }
-            detailActivityIntent.putExtras(bundle);
-            startActivity(detailActivityIntent);
-            return true;
-        });
-
-
+        // SET THE CAMERA TO USER'S POSITION
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOC_REQ_CODE);
         } else {
@@ -131,13 +106,14 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
 
         placeResult = placeDetectionClient.getCurrentPlace(null);
         placeResult.addOnFailureListener(task ->
-                Log.i("Map : onFailure", "Fail")
+                Log.e("Map : onFailure", "Fail")
         );
 
+        // PLACING MARKERS ON THE MAP
         placeResult.addOnCompleteListener(task -> {
             PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
             for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                Log.i("Map : onComplete", String.format("Place '%s' has likelihood: %g", placeLikelihood.getPlace().getPlaceTypes(), placeLikelihood.getLikelihood()));
+                // If the place is a restaurant
                 if (placeLikelihood.getPlace().getPlaceTypes().contains(restaurantPlace)) {
                     googleMap.addMarker(new MarkerOptions()
                             .position(placeLikelihood.getPlace().getLatLng())
@@ -146,11 +122,31 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
             }
             likelyPlaces.release();
         });
-
         //googleMap.addMarker(new MarkerOptions().position(new LatLng(48.8534100, 2.3488000)));
         //googleMap.addMarker(new MarkerOptions().position(new LatLng(48.8544100, 2.3498000)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+        // CLICK ON MARKER
+        googleMap.setOnMarkerClickListener(marker -> {
+            PlaceLikelihood resto = (PlaceLikelihood) marker.getTag();
+            Intent detailActivityIntent = new Intent(getContext(), DetailActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("detailName", resto.getPlace().getName().toString());
+            bundle.putString("detailAddress", resto.getPlace().getAddress().toString());
+            bundle.putFloat("detailRating", resto.getPlace().getRating());
+            bundle.putString("detailId", resto.getPlace().getId());
+            if (!TextUtils.isEmpty(resto.getPlace().getPhoneNumber())) {
+                bundle.putString("detailNumber", resto.getPlace().getPhoneNumber().toString());
+            }
+            if (resto.getPlace().getWebsiteUri() != null) {
+                bundle.putString("detailWebsite", resto.getPlace().getWebsiteUri().toString());
+            }
+            detailActivityIntent.putExtras(bundle);
+            startActivity(detailActivityIntent);
+            return true;
+        });
     }
 
+    // Transform Double into Long
     SharedPreferences.Editor putDouble(final SharedPreferences.Editor edit, final String key, final double value) {
         return edit.putLong(key, Double.doubleToRawLongBits(value));
     }

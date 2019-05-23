@@ -55,7 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void onClick(View v) {
-        if (v == mButton) {
+        if (v == mButton) { // Update user's name
             UserHelper.updateUsername(mEditText.getText().toString(), FirebaseAuth.getInstance().getUid());
         }
     }
@@ -107,7 +107,7 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void configureEditText() {
+    private void configureEditText() { // Update EditText with user's data
         UserHelper.getUser(FirebaseAuth.getInstance().getUid()).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();

@@ -50,8 +50,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private String restaurant;
 
-    @BindView(R.id.detail_recycler)
-    RecyclerView recyclerView;
+    @BindView(R.id.detail_recycler) RecyclerView recyclerView;
     private List<User> usersList;
     private DetailAdapter adapter;
 
@@ -83,27 +82,26 @@ public class DetailActivity extends AppCompatActivity {
         updateUsersList();
     }
 
-    private void updateCurrentRestaurant() {
+    private void updateCurrentRestaurant() { // Set "restaurant" to the actual value stored in Firebase
         restaurant = "";
         UserHelper.getUser(FirebaseAuth.getInstance().getUid()).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    Log.d("TAG", "DocumentSnapshot data: " + document.getData().get("restaurant"));
                     if (document.getData().get("restaurant") != null) {
                         restaurant = document.getData().get("restaurant").toString();
                         updateStar();
                     }
                 } else {
-                    Log.d("TAG", "No such document");
+                    Log.e("TAG", "No such document");
                 }
             } else {
-                Log.d("TAG", "Get failed with ", task.getException());
+                Log.e("TAG", "Get failed with ", task.getException());
             }
         });
     }
 
-    private void updateDetail() {
+    private void updateDetail() { // Display restaurant details
         name.setText(detailName);
 
         String subAddress = detailAddress.substring(0, detailAddress.indexOf(","));
@@ -113,7 +111,7 @@ public class DetailActivity extends AppCompatActivity {
         rating.setRating((float) doubleRating);
     }
 
-    private void updateStar() {
+    private void updateStar() { // Update the star icon and text
         if (restaurant.equals(detailId)) {
             like.setImageResource(R.drawable.ic_star_yellow_30dp);
             likeText.setText(R.string.liked);
@@ -124,7 +122,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void updateRestaurantLike() {
-        // On supprime de Firebase l'ancien restaurant liké
+        // Delete the old restaurant if the user already had one
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         if (!TextUtils.isEmpty(restaurant)) {
             RestaurantHelper.getRestaurant(restaurant).addOnCompleteListener(task -> {
@@ -137,13 +135,14 @@ public class DetailActivity extends AppCompatActivity {
                 }
             });
         }
+        // Create or update the restaurant to add the user in it
         RestaurantHelper.getRestaurant(detailId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
-                if (document.exists()) { // Si le restaurant est déjà créé : on ajoute user à la liste
+                if (document.exists()) { // If the restaurant is already created : add the user in it
                     DocumentReference docRef = db.collection(RestaurantHelper.COLLECTION_RESTAURANTS).document(detailId);
                     docRef.update("users", FieldValue.arrayUnion(FirebaseAuth.getInstance().getUid()));
-                } else { // Si le restaurant n'est pas créé : on le crée et on ajoute user à la liste
+                } else { // If the restaurant isn't created : create it and add the user in it
                     ArrayList<String> users = new ArrayList<>();
                     users.add(FirebaseAuth.getInstance().getUid());
                     RestaurantHelper.createRestaurant(detailId, users);
@@ -153,29 +152,33 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void updateRestaurantUnlike() {
+        // Remove the user of the restaurant
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection(RestaurantHelper.COLLECTION_RESTAURANTS).document(detailId);
         docRef.update("users", FieldValue.arrayRemove(FirebaseAuth.getInstance().getUid()));
     }
 
     private void onClick(View v) {
+        // CLICKED ON "CALL"
         if (v == call) {
-            if (!TextUtils.isEmpty(detailNumber)) {
+            if (!TextUtils.isEmpty(detailNumber)) { // If there is a phone number: display it into user's call app
                 Intent phoneIntent = new Intent(Intent.ACTION_DIAL);
                 phoneIntent.setData(Uri.parse("tel:" + detailNumber));
                 startActivity(phoneIntent);
-            } else {
-                Toast.makeText(this, "Aucun numéro de téléphone", Toast.LENGTH_SHORT).show();
+            } else { // If there isn't a phone number: tell it to the user with a Toast
+                Toast.makeText(this, R.string.no_phone_number, Toast.LENGTH_SHORT).show();
             }
-        } else if (v == like) {
-            if (restaurant.equals(detailId)) {
+        }
+        // CLICKED ON "LIKE"
+        else if (v == like) {
+            if (restaurant.equals(detailId)) { // If the user dislikes
                 UserHelper.updateRestaurant(null, FirebaseAuth.getInstance().getUid());
                 UserHelper.updateRestaurantName(null, FirebaseAuth.getInstance().getUid());
                 like.setImageResource(R.drawable.ic_star_orange_30dp);
                 likeText.setText(R.string.like);
                 updateRestaurantUnlike();
                 Toast.makeText(this, "UNLIKED !", Toast.LENGTH_SHORT).show();
-            } else {
+            } else { // If the user likes
                 UserHelper.updateRestaurant(detailId, FirebaseAuth.getInstance().getUid());
                 UserHelper.updateRestaurantName(detailName, FirebaseAuth.getInstance().getUid());
                 like.setImageResource(R.drawable.ic_star_yellow_30dp);
@@ -185,15 +188,17 @@ public class DetailActivity extends AppCompatActivity {
             }
             updateCurrentRestaurant();
             updateUsersList();
-        } else if (v == website) {
-            if (!TextUtils.isEmpty(detailWebsite)) {
+        }
+        // CLICKED ON "WEBSITE"
+        else if (v == website) {
+            if (!TextUtils.isEmpty(detailWebsite)) { // If there is a website: display it into user's browser
                 if (!detailWebsite.startsWith("http://") && !detailWebsite.startsWith("https://")) {
                     detailWebsite = "http://" + detailWebsite;
                 }
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(detailWebsite));
                 startActivity(browserIntent);
-            } else {
-                Toast.makeText(this, "Aucun site internet", Toast.LENGTH_SHORT).show();
+            } else { // If there isn't a website: tell it to the user with a Toast
+                Toast.makeText(this, R.string.no_website, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -205,11 +210,11 @@ public class DetailActivity extends AppCompatActivity {
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void updateUsersList() {
+    private void updateUsersList() { // Display all the users in the restaurant
         Query query = FirebaseFirestore.getInstance().collection(UserHelper.COLLECTION_USERS).whereEqualTo("restaurant", detailId);
         query.addSnapshotListener((snapshot, e) -> {
             if (e != null) {
-                // Handle error
+                Log.e("SnapShotListener", "Error: ", e);
                 return;
             }
             usersList = snapshot.toObjects(User.class);

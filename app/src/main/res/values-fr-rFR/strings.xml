@@ -12,7 +12,7 @@
     <string name="nav_logout">DÉCONNEXION</string>
     <string name="login">CONNEXION</string>
     <string name="error_authentication_canceled">Authentification annulée</string>
-    <string name="error_no_internet">Erreur : pas de connexion internet</string>
+    <string name="error_no_internet">Erreur : Pas de connexion internet</string>
     <string name="error_unknown_error">Erreur inconnue</string>
     <string name="call">APPEL</string>
     <string name="like">AIME</string>
@@ -29,4 +29,6 @@
     <string name="noEating">%s n\'a pas encore décidé</string>
     <string name="joining">%s a rejoint !</string>
     <string name="nav_header_desc">En-tête de navigation</string>
+    <string name="no_phone_number">Aucun numéro de téléphone</string>
+    <string name="no_website">Aucun site internet</string>
 </resources>

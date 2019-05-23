@@ -31,10 +31,8 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
         String subAddress = itemAddress.substring(0, itemAddress.indexOf(","));
         this.itemAddress.setText(subAddress);
         //this.itemHours.setText(itemHours);
-
         double rating = (itemRating / 1.7);
         this.itemRating.setRating((float) rating);
-
         this.itemDistance.setText(distance);
     }
 

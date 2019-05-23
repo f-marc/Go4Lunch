@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private View headerView;
     private int navigationPage;
 
+    // BOTTOM NAVIGATION
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = item -> {
                 switch (item.getItemId()) {
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //Inflate the navigationPage and add it to the Toolbar
+        // Inflate the navigationPage and add it to the Toolbar
         getMenuInflater().inflate(R.menu.activity_main_toolbar, menu);
         return true;
     }
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if (this.navigationPage == 3) {
+        if (this.navigationPage == 3) { // If fragment = workmates : don't display the "search" item
             menu.findItem(R.id.activity_main_search).setVisible(false);
         } else {
             menu.findItem(R.id.activity_main_search).setVisible(true);
@@ -122,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
         updateUserInfo(headerView);
 
+        // NAVIGATION DRAWER
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
 
@@ -148,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void updateUserInfo(View headerView) {
+    public void updateUserInfo(View headerView) { // Display user name/mail/image in the Navigation Header
 
         TextView userName = headerView.findViewById(R.id.nav_header_user_name);
         TextView userMail = headerView.findViewById(R.id.nav_header_user_mail);
@@ -167,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
                     .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
                     .apply(RequestOptions.circleCropTransform())
                     .into(userImage);
-        } else {
+        } else { // Display a default image if the user doesn't have one
             Glide.with(this)
                     .load(R.drawable.default_person)
                     .apply(RequestOptions.circleCropTransform())
@@ -181,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //Handle actions on navigationPage items
+        // Handle actions on navigationPage items
         switch (item.getItemId()) {
             case R.id.activity_main_search:
                 Toast.makeText(getApplicationContext(), "Search Button", Toast.LENGTH_SHORT).show();

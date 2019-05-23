@@ -26,10 +26,14 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailViewHolder> {
         this.glide = glide;
     }
 
-    public void setUsers(List<User> userList) {
-        this.usersList = userList;
-        Collections.sort(usersList, (o1, o2) -> o1.getUsername().compareToIgnoreCase(o2.getUsername()));
+    public void setUsers(List<User> usersList) {
+        this.usersList = usersList;
+        sortingAlphabetically(usersList);
         notifyDataSetChanged();
+    }
+
+    private void sortingAlphabetically(List<User> usersList) {
+        Collections.sort(usersList, (o1, o2) -> o1.getUsername().compareToIgnoreCase(o2.getUsername()));
     }
 
     public User getUsers(int position){

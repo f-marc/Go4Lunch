@@ -36,6 +36,8 @@
     <string name="liked">LIKED</string>
     <string name="website">WEBSITE</string>
     <string name="joining">%s is joining!</string>
+    <string name="no_phone_number">No phone number</string>
+    <string name="no_website">No website</string>
 
     <!-- SETTINGS ACTIVITY -->
     <string name="settings">Settings</string>

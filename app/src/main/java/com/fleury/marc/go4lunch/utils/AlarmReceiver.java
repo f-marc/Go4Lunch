@@ -29,7 +29,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notifications", NotificationManager.IMPORTANCE_DEFAULT);
 
-            // Configure the notification channel.
+            // Configure the notification channel
             notificationChannel.setDescription("Channel description");
             notificationChannel.enableLights(true);
             notificationChannel.enableVibration(true);

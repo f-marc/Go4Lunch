@@ -15,14 +15,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.Arrays;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import butterknife.BindView;
 
 public class LoginActivity extends AppCompatActivity {
 
-    //Identifier for Sign-In Activity
+    // Identifier for Sign-In Activity
     private static final int RC_SIGN_IN = 123;
-    @BindView(R.id.login_activity_coordinator_layout) CoordinatorLayout coordinatorLayout;
 
     private String uid;
     private String mail;
@@ -45,46 +42,40 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //Handle SignIn Activity response on activity result
+        // Handle SignIn Activity response on activity result
         this.handleResponseAfterSignIn(requestCode, resultCode, data);
     }
 
-    // --------------------
-    // UI
-    // --------------------
-
-    //Show Snack Bar with a message
-    private void showSnackBar(CoordinatorLayout coordinatorLayout, String message){
+    // Show Snack Bar with a message
+    private void showSnackBar(String message){
         Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show();
     }
 
-    // --------------------
-    // UTILS
-    // --------------------
-
-    //Method that handles response after SignIn Activity close
+    // Method that handles response after SignIn Activity close
     private void handleResponseAfterSignIn(int requestCode, int resultCode, Intent data){
-
         IdpResponse response = IdpResponse.fromResultIntent(data);
 
         if (requestCode == RC_SIGN_IN) {
-            if (resultCode == RESULT_OK) { // SUCCESS
+            // SUCCESS
+            if (resultCode == RESULT_OK) {
                 createUserInFirestore();
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
-            } else { // ERRORS
+            }
+            // ERRORS
+            else {
                 if (response == null) {
-                    showSnackBar(this.coordinatorLayout, getString(R.string.error_authentication_canceled));
+                    showSnackBar(getString(R.string.error_authentication_canceled));
                 } else if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
-                    showSnackBar(this.coordinatorLayout, getString(R.string.error_no_internet));
+                    showSnackBar(getString(R.string.error_no_internet));
                 } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
-                    showSnackBar(this.coordinatorLayout, getString(R.string.error_unknown_error));
+                    showSnackBar(getString(R.string.error_unknown_error));
                 }
             }
         }
     }
 
-    private void createUserInFirestore() {
+    private void createUserInFirestore() { // Create user
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
@@ -95,15 +86,10 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             urlPicture = null;
         }
-
         UserHelper.createUser(uid, mail, username, restaurant, restaurantName, urlPicture);
     }
 
-    // --------------------
-    // NAVIGATION
-    // --------------------
-
-    //Launch Sign-In Activity
+    // Launch Sign-In Activity
     private void startSignInActivity() {
         startActivityForResult(
                 AuthUI.getInstance()
@@ -111,14 +97,13 @@ public class LoginActivity extends AppCompatActivity {
                         .setTheme(R.style.LoginTheme)
                         .setAvailableProviders(
                                Arrays.asList(
-                                       new AuthUI.IdpConfig.EmailBuilder().build(), //EMAIL
-                                       new AuthUI.IdpConfig.FacebookBuilder().build(), //FACEBOOK
-                                       new AuthUI.IdpConfig.TwitterBuilder().build(), //TWITTER
-                                       new AuthUI.IdpConfig.GoogleBuilder().build())) //GOOGLE
+                                       new AuthUI.IdpConfig.EmailBuilder().build(), // EMAIL
+                                       new AuthUI.IdpConfig.FacebookBuilder().build(), // FACEBOOK
+                                       new AuthUI.IdpConfig.TwitterBuilder().build(), // TWITTER
+                                       new AuthUI.IdpConfig.GoogleBuilder().build())) // GOOGLE
                         .setIsSmartLockEnabled(false, true)
-                        //.setLogo(R.drawable.ic_logo_auth)
+                        .setLogo(R.drawable.ic_local_dining_orange_144dp)
                         .build(),
                 RC_SIGN_IN);
     }
-
 }

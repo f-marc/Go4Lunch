@@ -21,11 +21,9 @@ public class DetailViewHolder extends RecyclerView.ViewHolder {
 
         itemImage = itemView.findViewById(R.id.detail_item_image);
         itemName = itemView.findViewById(R.id.detail_item_name);
-
     }
 
     public void updateWithUser(String itemImage, String itemName, RequestManager glide){
-
         this.itemName.setText(itemName);
         if(!TextUtils.isEmpty(itemImage)){
             glide.load(itemImage)
