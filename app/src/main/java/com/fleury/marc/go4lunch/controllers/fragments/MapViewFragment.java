@@ -19,15 +19,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.fleury.marc.go4lunch.api.RestaurantHelper;
 import com.fleury.marc.go4lunch.api.UserHelper;
 import com.fleury.marc.go4lunch.controllers.activities.DetailActivity;
 import com.fleury.marc.go4lunch.R;
+import com.fleury.marc.go4lunch.models.Restaurant;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -36,6 +39,10 @@ import com.google.android.libraries.places.compat.PlaceDetectionClient;
 import com.google.android.libraries.places.compat.PlaceLikelihood;
 import com.google.android.libraries.places.compat.PlaceLikelihoodBufferResponse;
 import com.google.android.libraries.places.compat.Places;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.firebase.ui.auth.AuthUI.TAG;
 
@@ -118,12 +125,27 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
                     googleMap.addMarker(new MarkerOptions()
                             .position(placeLikelihood.getPlace().getLatLng())
                             .title(placeLikelihood.getPlace().getName().toString())).setTag(placeLikelihood);
+                    // If the restaurant is selected by a user
+                    RestaurantHelper.getRestaurantsCollection().get().addOnCompleteListener(taskR -> {
+                        if (taskR.isSuccessful()) {
+                            List<String> list = new ArrayList<>();
+                            for (QueryDocumentSnapshot document : taskR.getResult()) {
+                                list.add(document.getId());
+                            }
+                            if (list.contains(placeLikelihood.getPlace().getId())){
+                                googleMap.addMarker(new MarkerOptions()
+                                        .position(placeLikelihood.getPlace().getLatLng())
+                                        .title(placeLikelihood.getPlace().getName().toString())
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))).setTag(placeLikelihood);
+                            }
+                        } else {
+                            Log.d("TaskError", "Error getting documents: ", task.getException());
+                        }
+                    });
                 }
             }
             likelyPlaces.release();
         });
-        //googleMap.addMarker(new MarkerOptions().position(new LatLng(48.8534100, 2.3488000)));
-        //googleMap.addMarker(new MarkerOptions().position(new LatLng(48.8544100, 2.3498000)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
         // CLICK ON MARKER
         googleMap.setOnMarkerClickListener(marker -> {

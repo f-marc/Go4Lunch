@@ -84,12 +84,14 @@ public class DetailActivity extends AppCompatActivity {
 
     private void updateCurrentRestaurant() { // Set "restaurant" to the actual value stored in Firebase
         restaurant = "";
+        Log.i("snaptest0", "=" + restaurant);
         UserHelper.getUser(FirebaseAuth.getInstance().getUid()).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     if (document.getData().get("restaurant") != null) {
                         restaurant = document.getData().get("restaurant").toString();
+                        Log.i("snaptest1", "=" + restaurant);
                         updateStar();
                     }
                 } else {
@@ -124,16 +126,20 @@ public class DetailActivity extends AppCompatActivity {
     private void updateRestaurantLike() {
         // Delete the old restaurant if the user already had one
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Log.i("snaptest2", "=" + restaurant);
         if (!TextUtils.isEmpty(restaurant)) {
             RestaurantHelper.getRestaurant(restaurant).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
+                        Log.i("snaptest3", "=" + restaurant);
                         DocumentReference docRef = db.collection(RestaurantHelper.COLLECTION_RESTAURANTS).document(restaurant);
                         docRef.update("users", FieldValue.arrayRemove(FirebaseAuth.getInstance().getUid()));
                     }
+                    Log.i("snaptest4", "=" + restaurant);
                 }
             });
+            Log.i("snaptest5", "=" + restaurant);
         }
         // Create or update the restaurant to add the user in it
         RestaurantHelper.getRestaurant(detailId).addOnCompleteListener(task -> {
@@ -148,6 +154,7 @@ public class DetailActivity extends AppCompatActivity {
                     RestaurantHelper.createRestaurant(detailId, users);
                 }
             }
+
         });
     }
 
