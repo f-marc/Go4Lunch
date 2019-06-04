@@ -97,12 +97,13 @@ public class LoginActivity extends AppCompatActivity {
                         .setTheme(R.style.LoginTheme)
                         .setAvailableProviders(
                                Arrays.asList(
-                                       new AuthUI.IdpConfig.EmailBuilder().build(), // EMAIL
+                                       new AuthUI.IdpConfig.GoogleBuilder().build(), // GOOGLE
                                        new AuthUI.IdpConfig.FacebookBuilder().build(), // FACEBOOK
                                        new AuthUI.IdpConfig.TwitterBuilder().build(), // TWITTER
-                                       new AuthUI.IdpConfig.GoogleBuilder().build())) // GOOGLE
+                                       new AuthUI.IdpConfig.EmailBuilder().build())) // EMAIL
                         .setIsSmartLockEnabled(false, true)
-                        .setLogo(R.drawable.ic_local_dining_orange_144dp)
+                        .setTheme(R.style.AuthUiTheme)
+                        .setLogo(R.drawable.ic_local_dining_white_144dp)
                         .build(),
                 RC_SIGN_IN);
     }

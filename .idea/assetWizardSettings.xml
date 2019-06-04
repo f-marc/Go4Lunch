@@ -28,9 +28,12 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="ff5722" />
-                            <entry key="outputName" value="ic_local_dining_orange_24dp" />
+                            <entry key="color" value="ffffff" />
+                            <entry key="height" value="144" />
+                            <entry key="outputName" value="ic_local_dining_white_144dp" />
+                            <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="C:\Users\marc-" />
+                            <entry key="width" value="144" />
                           </map>
                         </option>
                       </PersistentState>

@@ -154,7 +154,6 @@ public class DetailActivity extends AppCompatActivity {
                     RestaurantHelper.createRestaurant(detailId, users);
                 }
             }
-
         });
     }
 

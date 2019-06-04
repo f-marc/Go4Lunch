@@ -9,9 +9,22 @@
         <item name="drawerArrowStyle">@style/DrawerIcon</item>
     </style>
 
+    <!-- Toolbar -->
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="colorControlNormal">@color/colorWhite</item>
+    </style>
+
     <!-- Hamburger color -->
     <style name="DrawerIcon" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="color">@color/colorWhite</item>
+    </style>
+
+    <!-- AuthUI -->
+    <style name="AuthUiTheme" parent="FirebaseUI">
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@drawable/side_nav_bar</item>
     </style>
 
     <!-- STYLE SIGN-IN ACTIVITY -->

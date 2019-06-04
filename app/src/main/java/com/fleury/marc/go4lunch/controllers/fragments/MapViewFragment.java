@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -34,11 +35,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.compat.PlaceDetectionClient;
 import com.google.android.libraries.places.compat.PlaceLikelihood;
 import com.google.android.libraries.places.compat.PlaceLikelihoodBufferResponse;
 import com.google.android.libraries.places.compat.Places;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -131,6 +134,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
                             List<String> list = new ArrayList<>();
                             for (QueryDocumentSnapshot document : taskR.getResult()) {
                                 list.add(document.getId());
+                                // OUPS : IL FAUT RECUPERER LA LISTE DES USER DE CHAQUE RESTO, PAS JUSTE LES RESTO
                             }
                             if (list.contains(placeLikelihood.getPlace().getId())){
                                 googleMap.addMarker(new MarkerOptions()
