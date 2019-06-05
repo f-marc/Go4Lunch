@@ -129,14 +129,16 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
                             .position(placeLikelihood.getPlace().getLatLng())
                             .title(placeLikelihood.getPlace().getName().toString())).setTag(placeLikelihood);
                     // If the restaurant is selected by a user
-                    RestaurantHelper.getRestaurantsCollection().get().addOnCompleteListener(taskR -> {
+                    RestaurantHelper.getRestaurant(placeLikelihood.getPlace().getId()).addOnCompleteListener(taskR -> {
                         if (taskR.isSuccessful()) {
+                            DocumentSnapshot document = taskR.getResult();
                             List<String> list = new ArrayList<>();
-                            for (QueryDocumentSnapshot document : taskR.getResult()) {
-                                list.add(document.getId());
-                                // OUPS : IL FAUT RECUPERER LA LISTE DES USER DE CHAQUE RESTO, PAS JUSTE LES RESTO
+                            try {
+                                list = (List<String>) document.getData().get("users");
+                            } catch (NullPointerException e) {
+                                Log.e("GetDataError", "Error" + e);
                             }
-                            if (list.contains(placeLikelihood.getPlace().getId())){
+                            if (!list.isEmpty()){
                                 googleMap.addMarker(new MarkerOptions()
                                         .position(placeLikelihood.getPlace().getLatLng())
                                         .title(placeLikelihood.getPlace().getName().toString())

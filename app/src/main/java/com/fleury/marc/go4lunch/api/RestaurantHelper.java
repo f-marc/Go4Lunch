@@ -3,6 +3,7 @@ package com.fleury.marc.go4lunch.api;
 import com.fleury.marc.go4lunch.models.Restaurant;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -16,6 +17,11 @@ public class RestaurantHelper {
 
     public static CollectionReference getRestaurantsCollection(){
         return FirebaseFirestore.getInstance().collection(COLLECTION_RESTAURANTS);
+    }
+
+    // --- DOCUMENT REFERENCE ---
+    public static DocumentReference getRestaurantsDocument(String document) {
+        return RestaurantHelper.getRestaurantsCollection().document(document);
     }
 
     // --- CREATE ---

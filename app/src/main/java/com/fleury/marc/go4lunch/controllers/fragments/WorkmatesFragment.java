@@ -68,7 +68,7 @@ public class WorkmatesFragment extends Fragment {
     }
 
     private void updateUsersList() { // Display all the users
-        Query query = FirebaseFirestore.getInstance().collection(UserHelper.COLLECTION_USERS);
+        Query query = UserHelper.getUsersCollection();
         query.addSnapshotListener((snapshot, e) -> {
             if (e != null) {
                 Log.e("SnapShotListener", "Error: ", e);

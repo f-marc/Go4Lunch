@@ -125,7 +125,6 @@ public class DetailActivity extends AppCompatActivity {
 
     private void updateRestaurantLike() {
         // Delete the old restaurant if the user already had one
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         Log.i("snaptest2", "=" + restaurant);
         if (!TextUtils.isEmpty(restaurant)) {
             RestaurantHelper.getRestaurant(restaurant).addOnCompleteListener(task -> {
@@ -133,7 +132,7 @@ public class DetailActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.i("snaptest3", "=" + restaurant);
-                        DocumentReference docRef = db.collection(RestaurantHelper.COLLECTION_RESTAURANTS).document(restaurant);
+                        DocumentReference docRef = RestaurantHelper.getRestaurantsDocument(restaurant);
                         docRef.update("users", FieldValue.arrayRemove(FirebaseAuth.getInstance().getUid()));
                     }
                     Log.i("snaptest4", "=" + restaurant);
@@ -146,7 +145,7 @@ public class DetailActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) { // If the restaurant is already created : add the user in it
-                    DocumentReference docRef = db.collection(RestaurantHelper.COLLECTION_RESTAURANTS).document(detailId);
+                    DocumentReference docRef = RestaurantHelper.getRestaurantsDocument(detailId);
                     docRef.update("users", FieldValue.arrayUnion(FirebaseAuth.getInstance().getUid()));
                 } else { // If the restaurant isn't created : create it and add the user in it
                     ArrayList<String> users = new ArrayList<>();
@@ -159,8 +158,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private void updateRestaurantUnlike() {
         // Remove the user of the restaurant
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection(RestaurantHelper.COLLECTION_RESTAURANTS).document(detailId);
+        DocumentReference docRef = RestaurantHelper.getRestaurantsDocument(detailId);
         docRef.update("users", FieldValue.arrayRemove(FirebaseAuth.getInstance().getUid()));
     }
 
@@ -217,7 +215,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void updateUsersList() { // Display all the users in the restaurant
-        Query query = FirebaseFirestore.getInstance().collection(UserHelper.COLLECTION_USERS).whereEqualTo("restaurant", detailId);
+        Query query = UserHelper.getUsersCollection().whereEqualTo("restaurant", detailId);
         query.addSnapshotListener((snapshot, e) -> {
             if (e != null) {
                 Log.e("SnapShotListener", "Error: ", e);
