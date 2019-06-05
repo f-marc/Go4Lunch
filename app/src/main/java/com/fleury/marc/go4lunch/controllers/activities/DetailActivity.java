@@ -153,6 +153,7 @@ public class DetailActivity extends AppCompatActivity {
                     RestaurantHelper.createRestaurant(detailId, users);
                 }
             }
+            updateCurrentRestaurant();
         });
     }
 
@@ -160,6 +161,7 @@ public class DetailActivity extends AppCompatActivity {
         // Remove the user of the restaurant
         DocumentReference docRef = RestaurantHelper.getRestaurantsDocument(detailId);
         docRef.update("users", FieldValue.arrayRemove(FirebaseAuth.getInstance().getUid()));
+        updateCurrentRestaurant();
     }
 
     private void onClick(View v) {
@@ -190,7 +192,6 @@ public class DetailActivity extends AppCompatActivity {
                 updateRestaurantLike();
                 Toast.makeText(this, "LIKED !", Toast.LENGTH_SHORT).show();
             }
-            updateCurrentRestaurant();
             updateUsersList();
         }
         // CLICKED ON "WEBSITE"
