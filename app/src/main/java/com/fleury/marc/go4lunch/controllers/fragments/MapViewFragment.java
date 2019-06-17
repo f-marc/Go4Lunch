@@ -8,10 +8,10 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+
 import butterknife.ButterKnife;
 
 import android.text.TextUtils;
@@ -20,11 +20,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.fleury.marc.go4lunch.BuildConfig;
 import com.fleury.marc.go4lunch.api.RestaurantHelper;
-import com.fleury.marc.go4lunch.api.UserHelper;
 import com.fleury.marc.go4lunch.controllers.activities.DetailActivity;
 import com.fleury.marc.go4lunch.R;
-import com.fleury.marc.go4lunch.models.Restaurant;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,28 +35,34 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.compat.PlaceDetectionClient;
-import com.google.android.libraries.places.compat.PlaceLikelihood;
-import com.google.android.libraries.places.compat.PlaceLikelihoodBufferResponse;
-import com.google.android.libraries.places.compat.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.PlaceLikelihood;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static com.firebase.ui.auth.AuthUI.TAG;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 
 public class MapViewFragment extends Fragment implements OnMapReadyCallback {
 
+    private static final String apiKey = BuildConfig.GoogleMapsKey;
+
     private GoogleMap mMap;
     private FusedLocationProviderClient client;
     private LatLng placeLoc;
-    private PlaceDetectionClient placeDetectionClient;
-    private Task<PlaceLikelihoodBufferResponse> placeResult;
+    //private PlaceDetectionClient placeDetectionClient;
+    //private Task<PlaceLikelihoodBufferResponse> placeResult;
+    private PlacesClient placesClient;
+    private List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME);
+    FindCurrentPlaceRequest request = FindCurrentPlaceRequest.builder(placeFields).build();
 
     private double latitude = 0.0;
     private double longitude = 0.0;
@@ -74,11 +80,14 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
         ButterKnife.bind(this, view);
 
+        Places.initialize(getActivity().getApplicationContext(), apiKey);
+        placesClient = Places.createClient(getContext());
+
         pref = getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
         editor = pref.edit();
 
         client = LocationServices.getFusedLocationProviderClient(getActivity());
-        placeDetectionClient = Places.getPlaceDetectionClient(getActivity());
+        //placeDetectionClient = Places.getPlaceDetectionClient(getActivity());
 
         return view;
     }
@@ -98,9 +107,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
         }
 
         // SET THE CAMERA TO USER'S POSITION
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOC_REQ_CODE);
-        } else {
+        if (ContextCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             client.getLastLocation().addOnSuccessListener(getActivity(), location -> {
                 if (location != null) {
                     latitude = location.getLatitude();
@@ -112,15 +119,42 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
                 }
             });
             mMap.setMyLocationEnabled(true);
+        } else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{ACCESS_FINE_LOCATION}, LOC_REQ_CODE);
         }
 
-        placeResult = placeDetectionClient.getCurrentPlace(null);
+        // PLACING MARKERS ON THE MAP
+        if (ContextCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
+            placeResponse.addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    FindCurrentPlaceResponse response = task.getResult();
+                    for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
+                        Log.i("place", String.format("Place '%s' /// Type '%s' /// ID '%s' /// likelihood: %f",
+                                placeLikelihood.getPlace().getName(),
+                                placeLikelihood.getPlace().getTypes(),
+                                placeLikelihood.getPlace().getId(),
+                                placeLikelihood.getLikelihood()));
+                    }
+                } else {
+                    Exception exception = task.getException();
+                    if (exception instanceof ApiException) {
+                        ApiException apiException = (ApiException) exception;
+                        Log.e("bug", "Place not found: " + apiException.getStatusCode());
+                    }
+                }
+            });
+        } else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{ACCESS_FINE_LOCATION}, LOC_REQ_CODE);
+        }
+
+        /*placeResult = placeDetectionClient.getCurrentPlace(null);
         placeResult.addOnFailureListener(task ->
                 Log.e("Map : onFailure", "Fail")
-        );
+        );*/
 
         // PLACING MARKERS ON THE MAP
-        placeResult.addOnCompleteListener(task -> {
+        /*placeResult.addOnCompleteListener(task -> {
             PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
             for (PlaceLikelihood placeLikelihood : likelyPlaces) {
                 // If the place is a restaurant
@@ -151,19 +185,19 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
                 }
             }
             likelyPlaces.release();
-        });
+        });*/
 
         // CLICK ON MARKER
         googleMap.setOnMarkerClickListener(marker -> {
             PlaceLikelihood resto = (PlaceLikelihood) marker.getTag();
             Intent detailActivityIntent = new Intent(getContext(), DetailActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putString("detailName", resto.getPlace().getName().toString());
-            bundle.putString("detailAddress", resto.getPlace().getAddress().toString());
-            bundle.putFloat("detailRating", resto.getPlace().getRating());
+            bundle.putString("detailName", resto.getPlace().getName());
+            bundle.putString("detailAddress", resto.getPlace().getAddress());
+            //bundle.putFloat("detailRating", resto.getPlace().getRating());
             bundle.putString("detailId", resto.getPlace().getId());
             if (!TextUtils.isEmpty(resto.getPlace().getPhoneNumber())) {
-                bundle.putString("detailNumber", resto.getPlace().getPhoneNumber().toString());
+                bundle.putString("detailNumber", resto.getPlace().getPhoneNumber());
             }
             if (resto.getPlace().getWebsiteUri() != null) {
                 bundle.putString("detailWebsite", resto.getPlace().getWebsiteUri().toString());
@@ -175,7 +209,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     }
 
     // Transform Double into Long
-    SharedPreferences.Editor putDouble(final SharedPreferences.Editor edit, final String key, final double value) {
+    private SharedPreferences.Editor putDouble(final SharedPreferences.Editor edit, final String key, final double value) {
         return edit.putLong(key, Double.doubleToRawLongBits(value));
     }
 }

@@ -26,12 +26,9 @@ import com.fleury.marc.go4lunch.controllers.activities.DetailActivity;
 import com.fleury.marc.go4lunch.R;
 import com.fleury.marc.go4lunch.adapters.ListViewAdapter;
 import com.fleury.marc.go4lunch.utils.ItemClickSupport;
-import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.compat.Place;
-import com.google.android.libraries.places.compat.PlaceDetectionClient;
-import com.google.android.libraries.places.compat.PlaceLikelihood;
-import com.google.android.libraries.places.compat.PlaceLikelihoodBufferResponse;
-import com.google.android.libraries.places.compat.Places;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.PlaceLikelihood;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +41,7 @@ public class ListViewFragment extends Fragment {
 
     private static final int LOC_REQ_CODE = 1;
 
-    private PlaceDetectionClient placeDetectionClient;
+    //private PlaceDetectionClient placeDetectionClient;
     private List<Place> placesList;
     private ListViewAdapter adapter;
 
@@ -58,12 +55,12 @@ public class ListViewFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_list_view, container, false);
         ButterKnife.bind(this, view);
 
-        placeDetectionClient = Places.getPlaceDetectionClient(getActivity());
+        //placeDetectionClient = Places.getPlaceDetectionClient(getActivity());
 
         SharedPreferences pref = getContext().getSharedPreferences("pref", Context.MODE_PRIVATE);
 
-        lat = getDouble(pref, "locLat", 0.0);
-        lng = getDouble(pref, "locLng", 0.0);
+        //lat = getDouble(pref, "locLat", 0.0);
+        //lng = getDouble(pref, "locLng", 0.0);
 
         configureRecyclerView();
         configureOnClickRecyclerView();
@@ -87,7 +84,7 @@ public class ListViewFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putString("detailName", place.getName().toString());
                     bundle.putString("detailAddress", place.getAddress().toString());
-                    bundle.putFloat("detailRating", place.getRating());
+                    //bundle.putFloat("detailRating", place.getRating());
                     bundle.putString("detailId", place.getId());
                     if (!TextUtils.isEmpty(place.getPhoneNumber())) {
                         bundle.putString("detailNumber", place.getPhoneNumber().toString());
@@ -105,12 +102,12 @@ public class ListViewFragment extends Fragment {
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOC_REQ_CODE);
         } else {
-            getCurrentPlaceData();
+            //getCurrentPlaceData();
 
         }
     }
 
-    @SuppressLint("MissingPermission")
+    /*@SuppressLint("MissingPermission")
     private void getCurrentPlaceData() {
         Task<PlaceLikelihoodBufferResponse> placeResult = placeDetectionClient.getCurrentPlace(null);
         placeResult.addOnFailureListener(task ->
@@ -140,7 +137,7 @@ public class ListViewFragment extends Fragment {
     // Transform Long into Double
     private double getDouble(final SharedPreferences prefs, final String key, final double defaultValue) {
         return Double.longBitsToDouble(prefs.getLong(key, Double.doubleToLongBits(defaultValue)));
-    }
+    }*/
 
 }
 

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.fleury.marc.go4lunch.R;
 import com.fleury.marc.go4lunch.views.ListViewHolder;
-import com.google.android.libraries.places.compat.Place;
+import com.google.android.libraries.places.api.model.Place;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -76,7 +76,7 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
         String name = place.getName().toString();
         String address = place.getAddress().toString();
         String phone = place.getPhoneNumber().toString();
-        Float rating = place.getRating();
+        double rating = place.getRating();
         double latitude = place.getLatLng().latitude;
         double longitude = place.getLatLng().longitude;
 

@@ -26,7 +26,7 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
         itemRating = itemView.findViewById(R.id.item_rating);
     }
 
-    public void updateWithPlace(String itemName, String itemAddress, String itemHours, Float itemRating, String distance){
+    public void updateWithPlace(String itemName, String itemAddress, String itemHours, double itemRating, String distance){
         this.itemName.setText(itemName);
         String subAddress = itemAddress.substring(0, itemAddress.indexOf(","));
         this.itemAddress.setText(subAddress);

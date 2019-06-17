@@ -18,8 +18,9 @@ import com.fleury.marc.go4lunch.controllers.fragments.ListViewFragment;
 import com.fleury.marc.go4lunch.controllers.fragments.MapViewFragment;
 import com.fleury.marc.go4lunch.controllers.fragments.WorkmatesFragment;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.libraries.places.compat.Place;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         configureToolbar();
         configureDrawerLayout();
         configureNavigationView();
+        autocomplete();
     }
 
     @Override
@@ -194,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void autocomplete() {
-        /*
+
         // Initialize the AutocompleteSupportFragment.
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
@@ -207,14 +209,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
-                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+                Log.i("TESTAUTO", "Place: " + place.getName() + ", " + place.getId());
             }
 
             @Override
             public void onError(Status status) {
                 // TODO: Handle the error.
-                Log.i(TAG, "An error occurred: " + status);
+                Log.i("TESTAUTO", "An error occurred: " + status);
             }
-        });*/
+        });
     }
 }
