@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.fleury.marc.go4lunch.R;
 import com.fleury.marc.go4lunch.api.RestaurantHelper;
 import com.fleury.marc.go4lunch.views.ListViewHolder;
+import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -80,7 +81,10 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
         String name = place.getName();
         String address = place.getAddress();
         String hours = " ";
+        Log.i("testHours", "weekday : " + place.getOpeningHours().getWeekdayText().toString());
+        Log.i("testHours", "periods : " + place.getOpeningHours().getPeriods().toString());
         Double rating = place.getRating();
+        PhotoMetadata photo = place.getPhotoMetadatas().get(0);
         double latitude = place.getLatLng().latitude;
         double longitude = place.getLatLng().longitude;
 
@@ -104,7 +108,7 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
             } else {
                 Log.d("TaskError", "Error getting documents: ", task.getException());
             }
-            viewHolder.updateWithPlace(name, address, hours, distance, persons, rating);
+            viewHolder.updateWithPlace(name, address, hours, distance, persons, rating, photo);
         });
     }
 

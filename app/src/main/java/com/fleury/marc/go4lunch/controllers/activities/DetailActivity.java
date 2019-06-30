@@ -61,7 +61,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private PlacesClient placesClient;
     private List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.RATING,
-            Place.Field.PHONE_NUMBER, Place.Field.WEBSITE_URI);
+            Place.Field.PHONE_NUMBER, Place.Field.WEBSITE_URI, Place.Field.PHOTO_METADATAS);
 
     private String detailName, detailAddress, detailId, detailNumber, detailWebsite;
     private Double detailRating;
@@ -153,11 +153,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void updatePhoto() {
-        String attributions = detailPhoto.getAttributions();
-
         FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(detailPhoto)
-                //.setMaxWidth(500) // Optional.
-                //.setMaxHeight(300) // Optional.
                 .build();
         placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
             Bitmap bitmap = fetchPhotoResponse.getBitmap();
