@@ -3,10 +3,12 @@ package com.fleury.marc.go4lunch.controllers.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,11 +20,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.fleury.marc.go4lunch.BuildConfig;
 import com.fleury.marc.go4lunch.R;
 import com.fleury.marc.go4lunch.adapters.DetailAdapter;
 import com.fleury.marc.go4lunch.api.RestaurantHelper;
 import com.fleury.marc.go4lunch.api.UserHelper;
 import com.fleury.marc.go4lunch.models.User;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.PhotoMetadata;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.FetchPhotoRequest;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -33,6 +43,7 @@ import com.google.firebase.firestore.Query;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
@@ -40,13 +51,21 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detail_name) TextView name;
     @BindView(R.id.detail_address) TextView address;
     @BindView(R.id.detail_like_text) TextView likeText;
+    @BindView(R.id.detail_image) ImageView photo;
     @BindView(R.id.detail_call_image) ImageView call;
     @BindView(R.id.detail_like_image) ImageView like;
     @BindView(R.id.detail_website_image) ImageView website;
     @BindView(R.id.detail_rating) RatingBar rating;
 
+    private static final String apiKey = BuildConfig.GoogleMapsKey;
+
+    private PlacesClient placesClient;
+    private List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.RATING,
+            Place.Field.PHONE_NUMBER, Place.Field.WEBSITE_URI);
+
     private String detailName, detailAddress, detailId, detailNumber, detailWebsite;
-    private Float detailRating;
+    private Double detailRating;
+    private PhotoMetadata detailPhoto;
 
     private String restaurant;
 
@@ -60,24 +79,44 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 
+        detailId = getIntent().getExtras().getString("detailId");
+
+        Places.initialize(getApplicationContext(), apiKey);
+        placesClient = Places.createClient(this);
+
+        FetchPlaceRequest request = FetchPlaceRequest.builder(detailId, placeFields).build();
+        placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
+            Place place = response.getPlace();
+            detailName = place.getName();
+            detailAddress = place.getAddress();
+            detailRating = place.getRating();
+            if (!TextUtils.isEmpty(place.getPhoneNumber())) {
+                detailNumber = place.getPhoneNumber();
+            }
+            if (place.getWebsiteUri() != null) {
+                detailWebsite = place.getWebsiteUri().toString();
+            }
+            if (place.getPhotoMetadatas() != null) {
+                Log.i("placeTest", "photo OK");
+                detailPhoto = place.getPhotoMetadatas().get(0);
+                updatePhoto();
+            } else {
+                Log.i("placeTest", "photo PAS OK : " + place.getPhotoMetadatas());
+            }
+            updateDetail();
+        }).addOnFailureListener((exception) -> {
+            if (exception instanceof ApiException) {
+                ApiException apiException = (ApiException) exception;
+                // Handle error with given status code.
+                Log.e("placeTest", "Place not found: " + apiException.getStatusCode());
+            }
+        });
+
         call.setOnClickListener(this::onClick);
         like.setOnClickListener(this::onClick);
         website.setOnClickListener(this::onClick);
 
-        detailName = getIntent().getExtras().getString("detailName");
-        detailAddress = getIntent().getExtras().getString("detailAddress");
-        detailId = getIntent().getExtras().getString("detailId");
-        detailRating = getIntent().getExtras().getFloat("detailRating");
-
-        if (!TextUtils.isEmpty(getIntent().getExtras().getString("detailNumber"))) {
-            detailNumber = getIntent().getExtras().getString("detailNumber");
-        }
-        if (!TextUtils.isEmpty(getIntent().getExtras().getString("detailWebsite"))) {
-            detailWebsite = getIntent().getExtras().getString("detailWebsite");
-        }
-
         updateCurrentRestaurant();
-        updateDetail();
         configureRecyclerView();
         updateUsersList();
     }
@@ -111,6 +150,24 @@ public class DetailActivity extends AppCompatActivity {
 
         double doubleRating = (detailRating / 1.7);
         rating.setRating((float) doubleRating);
+    }
+
+    private void updatePhoto() {
+        String attributions = detailPhoto.getAttributions();
+
+        FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(detailPhoto)
+                //.setMaxWidth(500) // Optional.
+                //.setMaxHeight(300) // Optional.
+                .build();
+        placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
+            Bitmap bitmap = fetchPhotoResponse.getBitmap();
+            photo.setImageBitmap(bitmap);
+        }).addOnFailureListener((exception) -> {
+            if (exception instanceof ApiException) {
+                ApiException apiException = (ApiException) exception;
+                Log.e("photoBug", "Place not found: " + apiException.getStatusCode());
+            }
+        });
     }
 
     private void updateStar() { // Update the star icon and text

@@ -2,13 +2,16 @@ package com.fleury.marc.go4lunch.adapters;
 
 import android.content.Context;
 import android.location.Location;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.fleury.marc.go4lunch.R;
+import com.fleury.marc.go4lunch.api.RestaurantHelper;
 import com.fleury.marc.go4lunch.views.ListViewHolder;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -22,6 +25,7 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
     private List<Place> placesList;
     private Context context;
 
+    int persons;
     private double lat;
     private double lng;
     private float[] result1 = new float[1];
@@ -47,7 +51,7 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
             double latitude2 = o2.getLatLng().latitude;
             double longitude2 = o2.getLatLng().longitude;
             Location.distanceBetween(lat, lng, latitude2, longitude2, result2);
-            if (result1[0] > result2[0]){
+            if (result1[0] > result2[0]) {
                 return 1;
             } else if (result2[0] > result1[0]) {
                 return -1;
@@ -56,7 +60,7 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
         });
     }
 
-    public Place getPlaces(int position){
+    public Place getPlaces(int position) {
         return this.placesList.get(position);
     }
 
@@ -73,10 +77,10 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
     public void onBindViewHolder(ListViewHolder viewHolder, int position) {
         final Place place = placesList.get(position);
 
-        String name = place.getName().toString();
-        String address = place.getAddress().toString();
-        String phone = place.getPhoneNumber().toString();
-        double rating = place.getRating();
+        String name = place.getName();
+        String address = place.getAddress();
+        String hours = " ";
+        Double rating = place.getRating();
         double latitude = place.getLatLng().latitude;
         double longitude = place.getLatLng().longitude;
 
@@ -85,12 +89,28 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
         df.setRoundingMode(RoundingMode.HALF_UP);
         String distance = context.getString(R.string.distance, df.format(result1[0]));
 
-        viewHolder.updateWithPlace(name, address, phone, rating, distance);
+        RestaurantHelper.getRestaurant(place.getId()).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                List<String> list;
+                try {
+                    list = (List<String>) document.getData().get("users");
+                    if (list != null) {
+                        persons = list.size();
+                    }
+                } catch (NullPointerException e) {
+                    Log.e("GetDataError", "Error" + e);
+                }
+            } else {
+                Log.d("TaskError", "Error getting documents: ", task.getException());
+            }
+            viewHolder.updateWithPlace(name, address, hours, distance, persons, rating);
+        });
     }
 
     @Override
     public int getItemCount() {
-        if(placesList == null){
+        if (placesList == null) {
             return 0;
         }
         return placesList.size();

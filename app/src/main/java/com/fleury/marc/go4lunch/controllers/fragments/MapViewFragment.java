@@ -36,6 +36,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.PlaceLikelihood;
 import com.google.android.libraries.places.api.Places;
@@ -58,11 +59,10 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     private FusedLocationProviderClient client;
     private LatLng placeLoc;
-    //private PlaceDetectionClient placeDetectionClient;
-    //private Task<PlaceLikelihoodBufferResponse> placeResult;
     private PlacesClient placesClient;
-    private List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME);
-    FindCurrentPlaceRequest request = FindCurrentPlaceRequest.builder(placeFields).build();
+    private List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.TYPES, Place.Field.LAT_LNG,
+            Place.Field.ADDRESS, Place.Field.RATING, Place.Field.PHOTO_METADATAS);
+    private FindCurrentPlaceRequest request = FindCurrentPlaceRequest.builder(placeFields).build();
 
     private double latitude = 0.0;
     private double longitude = 0.0;
@@ -70,7 +70,6 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
     private static final int LOC_REQ_CODE = 1;
-    private static final int restaurantPlace = 79;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,7 +86,6 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
         editor = pref.edit();
 
         client = LocationServices.getFusedLocationProviderClient(getActivity());
-        //placeDetectionClient = Places.getPlaceDetectionClient(getActivity());
 
         return view;
     }
@@ -125,83 +123,65 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
 
         // PLACING MARKERS ON THE MAP
         if (ContextCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Log.i("placeTest", "Autorisation OK");
             Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
             placeResponse.addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
+                    Log.i("placeTest", "Task Successful");
                     FindCurrentPlaceResponse response = task.getResult();
                     for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
-                        Log.i("place", String.format("Place '%s' /// Type '%s' /// ID '%s' /// likelihood: %f",
-                                placeLikelihood.getPlace().getName(),
-                                placeLikelihood.getPlace().getTypes(),
-                                placeLikelihood.getPlace().getId(),
-                                placeLikelihood.getLikelihood()));
+                        if (placeLikelihood.getPlace().getTypes().contains(Place.Type.RESTAURANT)) {
+                            Log.i("placeTest", String.format("Place '%s' /// Type '%s' /// ID '%s' /// likelihood: %f",
+                                    placeLikelihood.getPlace().getName(),
+                                    placeLikelihood.getPlace().getTypes(),
+                                    placeLikelihood.getPlace().getId(),
+                                    placeLikelihood.getLikelihood()));
+                            googleMap.addMarker(new MarkerOptions()
+                                    .position(placeLikelihood.getPlace().getLatLng())
+                                    .title(placeLikelihood.getPlace().getName())).setTag(placeLikelihood);
+                            // If the restaurant is selected by a user
+                            RestaurantHelper.getRestaurant(placeLikelihood.getPlace().getId()).addOnCompleteListener(taskR -> {
+                                if (taskR.isSuccessful()) {
+                                    DocumentSnapshot document = taskR.getResult();
+                                    List<String> list = new ArrayList<>();
+                                    try {
+                                        list = (List<String>) document.getData().get("users");
+                                    } catch (NullPointerException e) {
+                                        Log.e("GetDataError", "Error" + e);
+                                    }
+                                    if (!list.isEmpty()) {
+                                        googleMap.addMarker(new MarkerOptions()
+                                                .position(placeLikelihood.getPlace().getLatLng())
+                                                .title(placeLikelihood.getPlace().getName())
+                                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))).setTag(placeLikelihood);
+                                    }
+                                } else {
+                                    Log.d("TaskError", "Error getting documents: ", taskR.getException());
+                                }
+                            });
+                        } else {
+                            Log.i("placeTest", "Pas de resto");
+                        }
                     }
                 } else {
                     Exception exception = task.getException();
                     if (exception instanceof ApiException) {
                         ApiException apiException = (ApiException) exception;
-                        Log.e("bug", "Place not found: " + apiException.getStatusCode());
+                        Log.e("placeTest", "Place not found: " + apiException.getStatusCode());
                     }
                 }
             });
         } else {
+            Log.i("placeTest", "Pas d'autorisation");
             ActivityCompat.requestPermissions(getActivity(), new String[]{ACCESS_FINE_LOCATION}, LOC_REQ_CODE);
         }
-
-        /*placeResult = placeDetectionClient.getCurrentPlace(null);
-        placeResult.addOnFailureListener(task ->
-                Log.e("Map : onFailure", "Fail")
-        );*/
-
-        // PLACING MARKERS ON THE MAP
-        /*placeResult.addOnCompleteListener(task -> {
-            PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
-            for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                // If the place is a restaurant
-                if (placeLikelihood.getPlace().getPlaceTypes().contains(restaurantPlace)) {
-                    googleMap.addMarker(new MarkerOptions()
-                            .position(placeLikelihood.getPlace().getLatLng())
-                            .title(placeLikelihood.getPlace().getName().toString())).setTag(placeLikelihood);
-                    // If the restaurant is selected by a user
-                    RestaurantHelper.getRestaurant(placeLikelihood.getPlace().getId()).addOnCompleteListener(taskR -> {
-                        if (taskR.isSuccessful()) {
-                            DocumentSnapshot document = taskR.getResult();
-                            List<String> list = new ArrayList<>();
-                            try {
-                                list = (List<String>) document.getData().get("users");
-                            } catch (NullPointerException e) {
-                                Log.e("GetDataError", "Error" + e);
-                            }
-                            if (!list.isEmpty()){
-                                googleMap.addMarker(new MarkerOptions()
-                                        .position(placeLikelihood.getPlace().getLatLng())
-                                        .title(placeLikelihood.getPlace().getName().toString())
-                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))).setTag(placeLikelihood);
-                            }
-                        } else {
-                            Log.d("TaskError", "Error getting documents: ", task.getException());
-                        }
-                    });
-                }
-            }
-            likelyPlaces.release();
-        });*/
 
         // CLICK ON MARKER
         googleMap.setOnMarkerClickListener(marker -> {
             PlaceLikelihood resto = (PlaceLikelihood) marker.getTag();
             Intent detailActivityIntent = new Intent(getContext(), DetailActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putString("detailName", resto.getPlace().getName());
-            bundle.putString("detailAddress", resto.getPlace().getAddress());
-            //bundle.putFloat("detailRating", resto.getPlace().getRating());
             bundle.putString("detailId", resto.getPlace().getId());
-            if (!TextUtils.isEmpty(resto.getPlace().getPhoneNumber())) {
-                bundle.putString("detailNumber", resto.getPlace().getPhoneNumber());
-            }
-            if (resto.getPlace().getWebsiteUri() != null) {
-                bundle.putString("detailWebsite", resto.getPlace().getWebsiteUri().toString());
-            }
             detailActivityIntent.putExtras(bundle);
             startActivity(detailActivityIntent);
             return true;
