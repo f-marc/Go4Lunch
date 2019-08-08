@@ -1,5 +1,6 @@
 package com.fleury.marc.go4lunch.controllers.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -18,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.fleury.marc.go4lunch.R;
 import com.fleury.marc.go4lunch.adapters.WorkmatesAdapter;
 import com.fleury.marc.go4lunch.api.UserHelper;
+import com.fleury.marc.go4lunch.controllers.activities.DetailActivity;
 import com.fleury.marc.go4lunch.models.User;
 import com.fleury.marc.go4lunch.utils.ItemClickSupport;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -57,12 +59,11 @@ public class WorkmatesFragment extends Fragment {
                 .setOnItemClickListener((recyclerView, position, v) -> {
                     User user = adapter.getUsers(position);
                     if (user.getRestaurant() != null) {
-                        //Intent detailActivityIntent = new Intent(getContext(), DetailActivity.class);
-                        //Bundle bundle = new Bundle();
-                        //bundle.putString("detailName", user.getRestaurant());
-                        //detailActivityIntent.putExtras(bundle);
-                        //startActivity(detailActivityIntent);
-                        Toast.makeText(getContext(), user.getUsername() + " eating at " + user.getRestaurant(), Toast.LENGTH_SHORT).show();
+                        Intent detailActivityIntent = new Intent(getContext(), DetailActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("detailId", user.getRestaurant());
+                        detailActivityIntent.putExtras(bundle);
+                        startActivity(detailActivityIntent);
                     }
                 });
     }
