@@ -60,8 +60,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     private FusedLocationProviderClient client;
     private LatLng placeLoc;
     private PlacesClient placesClient;
-    private List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.TYPES, Place.Field.LAT_LNG,
-            Place.Field.ADDRESS, Place.Field.RATING, Place.Field.PHOTO_METADATAS);
+    private List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.TYPES, Place.Field.LAT_LNG);
     private FindCurrentPlaceRequest request = FindCurrentPlaceRequest.builder(placeFields).build();
 
     private double latitude = 0.0;
@@ -131,11 +130,6 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
                     FindCurrentPlaceResponse response = task.getResult();
                     for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
                         if (placeLikelihood.getPlace().getTypes().contains(Place.Type.RESTAURANT)) {
-                            Log.i("placeTest", String.format("Place '%s' /// Type '%s' /// ID '%s' /// likelihood: %f",
-                                    placeLikelihood.getPlace().getName(),
-                                    placeLikelihood.getPlace().getTypes(),
-                                    placeLikelihood.getPlace().getId(),
-                                    placeLikelihood.getLikelihood()));
                             googleMap.addMarker(new MarkerOptions()
                                     .position(placeLikelihood.getPlace().getLatLng())
                                     .title(placeLikelihood.getPlace().getName())).setTag(placeLikelihood);

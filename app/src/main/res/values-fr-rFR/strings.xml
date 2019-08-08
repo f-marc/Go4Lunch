@@ -16,7 +16,8 @@
     <string name="error_unknown_error">Erreur inconnue</string>
     <string name="call">APPEL</string>
     <string name="like">AIME</string>
-    <string name="liked">AIMÉ</string>
+    <string name="liked">J\'AIME</string>
+    <string name="unliked">JE N\'AIME PLUS</string>
     <string name="website">SITE WEB</string>
     <string name="settings">Paramètres</string>
     <string name="edit">MODIFIER</string>
@@ -31,4 +32,5 @@
     <string name="nav_header_desc">En-tête de navigation</string>
     <string name="no_phone_number">Aucun numéro de téléphone</string>
     <string name="no_website">Aucun site internet</string>
+    <string name="no_restaurant">Aucun restaurant selectionné</string>
 </resources>

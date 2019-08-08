@@ -14,19 +14,24 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fleury.marc.go4lunch.R;
+import com.fleury.marc.go4lunch.api.UserHelper;
 import com.fleury.marc.go4lunch.controllers.fragments.ListViewFragment;
 import com.fleury.marc.go4lunch.controllers.fragments.MapViewFragment;
 import com.fleury.marc.go4lunch.controllers.fragments.WorkmatesFragment;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.Arrays;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -131,7 +136,28 @@ public class MainActivity extends AppCompatActivity {
 
             switch (id) {
                 case R.id.nav_lunch:
-                    Toast.makeText(getApplicationContext(), R.string.nav_lunch, Toast.LENGTH_LONG).show();
+                    // ------------------------- ICI --------------------------------
+                    UserHelper.getUser(FirebaseAuth.getInstance().getUid()).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                if (document.getData().get("restaurant") != null) {
+                                    Intent detailActivityIntent = new Intent(MainActivity.this, DetailActivity.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("detailId", (String) document.getData().get("restaurant"));
+                                    detailActivityIntent.putExtras(bundle);
+                                    startActivity(detailActivityIntent);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), R.string.no_restaurant, Toast.LENGTH_LONG).show();
+                                }
+                            } else {
+                                Log.d("TAG", "No such document");
+                                Toast.makeText(getApplicationContext(), R.string.no_restaurant, Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Log.d("TAG", "Get failed with ", task.getException());
+                        }
+                    });
                     break;
                 case R.id.nav_settings:
                     Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);

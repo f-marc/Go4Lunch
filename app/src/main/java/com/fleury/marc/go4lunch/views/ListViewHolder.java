@@ -61,6 +61,7 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
             this.itemPersons.setText("(" + itemPersons + ")");
         }
 
+        this.itemPhoto.setImageBitmap(null);
         FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(itemPhoto)
                 .build();
         placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {

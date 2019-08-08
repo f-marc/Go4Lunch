@@ -236,14 +236,14 @@ public class DetailActivity extends AppCompatActivity {
                 like.setImageResource(R.drawable.ic_star_orange_30dp);
                 likeText.setText(R.string.like);
                 updateRestaurantUnlike();
-                Toast.makeText(this, "UNLIKED !", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.unliked, Toast.LENGTH_SHORT).show();
             } else { // If the user likes
                 UserHelper.updateRestaurant(detailId, FirebaseAuth.getInstance().getUid());
                 UserHelper.updateRestaurantName(detailName, FirebaseAuth.getInstance().getUid());
                 like.setImageResource(R.drawable.ic_star_yellow_30dp);
                 likeText.setText(R.string.liked);
                 updateRestaurantLike();
-                Toast.makeText(this, "LIKED !", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.liked, Toast.LENGTH_SHORT).show();
             }
             updateUsersList();
         }

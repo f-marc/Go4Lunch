@@ -10,13 +10,18 @@ import android.view.ViewGroup;
 import com.fleury.marc.go4lunch.R;
 import com.fleury.marc.go4lunch.api.RestaurantHelper;
 import com.fleury.marc.go4lunch.views.ListViewHolder;
+import com.google.android.libraries.places.api.model.DayOfWeek;
+import com.google.android.libraries.places.api.model.Period;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +30,7 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
 
     private List<Place> placesList;
     private Context context;
+    private List<Period> periods2 = new ArrayList<>();
 
     int persons;
     private double lat;
@@ -78,6 +84,8 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
     public void onBindViewHolder(ListViewHolder viewHolder, int position) {
         final Place place = placesList.get(position);
 
+        Log.i("testHours", "--------------------------------------------------------------");
+
         String name = place.getName();
         String address = place.getAddress();
         String hours = " ";
@@ -92,6 +100,9 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
         DecimalFormat df = new DecimalFormat("#");
         df.setRoundingMode(RoundingMode.HALF_UP);
         String distance = context.getString(R.string.distance, df.format(result1[0]));
+
+        Log.i("testHours", name);
+        test(place.getOpeningHours().getPeriods());
 
         RestaurantHelper.getRestaurant(place.getId()).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -118,6 +129,47 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
             return 0;
         }
         return placesList.size();
+    }
+
+    private void test(List<Period> periods) {
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        switch (day) {
+            case Calendar.MONDAY:
+                test2(periods, DayOfWeek.MONDAY);
+                break;
+            case Calendar.TUESDAY:
+                test2(periods, DayOfWeek.TUESDAY);
+                break;
+            case Calendar.WEDNESDAY:
+                test2(periods, DayOfWeek.WEDNESDAY);
+                break;
+            case Calendar.THURSDAY:
+                test2(periods, DayOfWeek.THURSDAY);
+                break;
+            case Calendar.FRIDAY:
+                test2(periods, DayOfWeek.FRIDAY);
+                break;
+            case Calendar.SATURDAY:
+                test2(periods, DayOfWeek.SATURDAY);
+                break;
+            case Calendar.SUNDAY:
+                test2(periods, DayOfWeek.SUNDAY);
+                break;
+        }
+        Log.i("testHours", "LIST : " + periods2);
+
+    }
+
+    private void test2(List<Period> periods, DayOfWeek day) {
+        for (Period p : periods) {
+            if (p.getOpen().getDay() == day && p.getClose().getDay() == day) {
+                periods2.add(p);
+            }
+        }
     }
 
 }

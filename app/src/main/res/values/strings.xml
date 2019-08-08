@@ -11,6 +11,7 @@
     <string name="distance">%sm</string>
     <string name="yesEating">%1$s is eating at %2$s</string>
     <string name="noEating">%s hasn\'t decided yet</string>
+    <string name="no_restaurant">No restaurant selected</string>
 
     <!-- NAVIGATION DRAWER -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -34,6 +35,7 @@
     <string name="call">CALL</string>
     <string name="like">LIKE</string>
     <string name="liked">LIKED</string>
+    <string name="unliked">UNLIKED</string>
     <string name="website">WEBSITE</string>
     <string name="joining">%s is joining!</string>
     <string name="no_phone_number">No phone number</string>
