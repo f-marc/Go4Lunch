@@ -21,7 +21,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -102,7 +101,7 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
         String distance = context.getString(R.string.distance, df.format(result1[0]));
 
         Log.i("testHours", name);
-        test(place.getOpeningHours().getPeriods());
+        getOpening(place.getOpeningHours().getPeriods());
 
         RestaurantHelper.getRestaurant(place.getId()).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -131,7 +130,7 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
         return placesList.size();
     }
 
-    private void test(List<Period> periods) {
+    private void getOpening(List<Period> periods) {
         Calendar calendar = Calendar.getInstance();
         int day = calendar.get(Calendar.DAY_OF_WEEK);
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -139,32 +138,47 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
 
         switch (day) {
             case Calendar.MONDAY:
-                test2(periods, DayOfWeek.MONDAY);
+                filterByDay(periods, DayOfWeek.MONDAY);
                 break;
             case Calendar.TUESDAY:
-                test2(periods, DayOfWeek.TUESDAY);
+                filterByDay(periods, DayOfWeek.TUESDAY);
                 break;
             case Calendar.WEDNESDAY:
-                test2(periods, DayOfWeek.WEDNESDAY);
+                filterByDay(periods, DayOfWeek.WEDNESDAY);
                 break;
             case Calendar.THURSDAY:
-                test2(periods, DayOfWeek.THURSDAY);
+                filterByDay(periods, DayOfWeek.THURSDAY);
                 break;
             case Calendar.FRIDAY:
-                test2(periods, DayOfWeek.FRIDAY);
+                filterByDay(periods, DayOfWeek.FRIDAY);
                 break;
             case Calendar.SATURDAY:
-                test2(periods, DayOfWeek.SATURDAY);
+                filterByDay(periods, DayOfWeek.SATURDAY);
                 break;
             case Calendar.SUNDAY:
-                test2(periods, DayOfWeek.SUNDAY);
+                filterByDay(periods, DayOfWeek.SUNDAY);
                 break;
         }
         Log.i("testHours", "LIST : " + periods2);
 
+        for (Period p : periods2) {
+            Log.i("testHours", "open : " + p.getOpen().getTime().getHours());
+            Log.i("testHours", "close : " + p.getClose().getTime().getHours());
+            if (p.getClose().getTime().getHours() > hour) {
+                // FERMÉ
+            } else if (p.getClose().getTime().getHours() - hour == 0) {
+                if (p.getClose().getTime().getMinutes() > minute) {
+                    // FERMÉ
+                } else {
+                    // FERME BIENTÔT
+                }
+            } else {
+                // FERME À [getClose.getTime().getHours() + getClose.getTime().getMinutes()]
+            }
+        }
     }
 
-    private void test2(List<Period> periods, DayOfWeek day) {
+    private void filterByDay(List<Period> periods, DayOfWeek day) {
         for (Period p : periods) {
             if (p.getOpen().getDay() == day && p.getClose().getDay() == day) {
                 periods2.add(p);
