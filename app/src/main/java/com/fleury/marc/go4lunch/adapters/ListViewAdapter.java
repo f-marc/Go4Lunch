@@ -29,9 +29,8 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
 
     private List<Place> placesList;
     private Context context;
-    private List<Period> periods2 = new ArrayList<>();
 
-    int persons;
+    private int persons;
     private double lat;
     private double lng;
     private float[] result1 = new float[1];
@@ -87,7 +86,6 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
 
         String name = place.getName();
         String address = place.getAddress();
-        String hours = " ";
         Log.i("testHours", "weekday : " + place.getOpeningHours().getWeekdayText().toString());
         Log.i("testHours", "periods : " + place.getOpeningHours().getPeriods().toString());
         Double rating = place.getRating();
@@ -101,7 +99,6 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
         String distance = context.getString(R.string.distance, df.format(result1[0]));
 
         Log.i("testHours", name);
-        getOpening(place.getOpeningHours().getPeriods());
 
         RestaurantHelper.getRestaurant(place.getId()).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -118,7 +115,7 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
             } else {
                 Log.d("TaskError", "Error getting documents: ", task.getException());
             }
-            viewHolder.updateWithPlace(name, address, hours, distance, persons, rating, photo);
+            viewHolder.updateWithPlace(name, address, place.getOpeningHours().getPeriods() ,distance, persons, rating, photo);
         });
     }
 
@@ -128,62 +125,6 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
             return 0;
         }
         return placesList.size();
-    }
-
-    private void getOpening(List<Period> periods) {
-        Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-
-        switch (day) {
-            case Calendar.MONDAY:
-                filterByDay(periods, DayOfWeek.MONDAY);
-                break;
-            case Calendar.TUESDAY:
-                filterByDay(periods, DayOfWeek.TUESDAY);
-                break;
-            case Calendar.WEDNESDAY:
-                filterByDay(periods, DayOfWeek.WEDNESDAY);
-                break;
-            case Calendar.THURSDAY:
-                filterByDay(periods, DayOfWeek.THURSDAY);
-                break;
-            case Calendar.FRIDAY:
-                filterByDay(periods, DayOfWeek.FRIDAY);
-                break;
-            case Calendar.SATURDAY:
-                filterByDay(periods, DayOfWeek.SATURDAY);
-                break;
-            case Calendar.SUNDAY:
-                filterByDay(periods, DayOfWeek.SUNDAY);
-                break;
-        }
-        Log.i("testHours", "LIST : " + periods2);
-
-        for (Period p : periods2) {
-            Log.i("testHours", "open : " + p.getOpen().getTime().getHours());
-            Log.i("testHours", "close : " + p.getClose().getTime().getHours());
-            if (p.getClose().getTime().getHours() > hour) {
-                // FERMÉ
-            } else if (p.getClose().getTime().getHours() - hour == 0) {
-                if (p.getClose().getTime().getMinutes() > minute) {
-                    // FERMÉ
-                } else {
-                    // FERME BIENTÔT
-                }
-            } else {
-                // FERME À [getClose.getTime().getHours() + getClose.getTime().getMinutes()]
-            }
-        }
-    }
-
-    private void filterByDay(List<Period> periods, DayOfWeek day) {
-        for (Period p : periods) {
-            if (p.getOpen().getDay() == day && p.getClose().getDay() == day) {
-                periods2.add(p);
-            }
-        }
     }
 
 }

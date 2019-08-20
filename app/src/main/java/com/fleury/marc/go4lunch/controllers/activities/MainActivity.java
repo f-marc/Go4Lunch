@@ -22,6 +22,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         configureToolbar();
         configureDrawerLayout();
         configureNavigationView();
-        autocomplete();
+        //autocomplete();
     }
 
     @Override
@@ -136,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
 
             switch (id) {
                 case R.id.nav_lunch:
-                    // ------------------------- ICI --------------------------------
                     UserHelper.getUser(FirebaseAuth.getInstance().getUid()).addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
@@ -214,7 +214,8 @@ public class MainActivity extends AppCompatActivity {
         // Handle actions on navigationPage items
         switch (item.getItemId()) {
             case R.id.activity_main_search:
-                Toast.makeText(getApplicationContext(), "Search Button", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Search Button", Toast.LENGTH_SHORT).show();
+                autocomplete();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -224,11 +225,15 @@ public class MainActivity extends AppCompatActivity {
     private void autocomplete() {
 
         // Initialize the AutocompleteSupportFragment.
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        //AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+          //      getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
         // Specify the types of place data to return.
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+        AutocompleteSupportFragment autocompleteFragment = new AutocompleteSupportFragment();
+
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.TYPES));
+        autocompleteFragment.setCountry("fr");
+        autocompleteFragment.setTypeFilter(TypeFilter.ESTABLISHMENT);
 
         // Set up a PlaceSelectionListener to handle the response.
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {

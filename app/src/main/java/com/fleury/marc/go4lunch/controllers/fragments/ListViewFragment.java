@@ -113,6 +113,7 @@ public class ListViewFragment extends Fragment {
                             placesClient.fetchPlace(request2).addOnSuccessListener((response2) -> {
                                 Place place = response2.getPlace();
                                 placesList.add(place);
+                                Log.i("testDup", "place : " + place);
                                 adapter.setPlaces(placesList);
                             }).addOnFailureListener((exception) -> {
                                 if (exception instanceof ApiException) {
