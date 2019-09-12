@@ -19,20 +19,19 @@ import com.fleury.marc.go4lunch.controllers.fragments.ListViewFragment;
 import com.fleury.marc.go4lunch.controllers.fragments.MapViewFragment;
 import com.fleury.marc.go4lunch.controllers.fragments.WorkmatesFragment;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.TypeFilter;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.Arrays;
+import java.util.List;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -40,6 +39,8 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 public class MainActivity extends AppCompatActivity {
+
+    int AUTOCOMPLETE_REQUEST_CODE = 1;
 
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
@@ -87,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
         configureToolbar();
         configureDrawerLayout();
         configureNavigationView();
-        //autocomplete();
     }
 
     @Override
@@ -214,7 +214,6 @@ public class MainActivity extends AppCompatActivity {
         // Handle actions on navigationPage items
         switch (item.getItemId()) {
             case R.id.activity_main_search:
-                //Toast.makeText(getApplicationContext(), "Search Button", Toast.LENGTH_SHORT).show();
                 autocomplete();
                 return true;
             default:
@@ -222,32 +221,37 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void autocomplete() {
-
-        // Initialize the AutocompleteSupportFragment.
-        //AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-          //      getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-
-        // Specify the types of place data to return.
-        AutocompleteSupportFragment autocompleteFragment = new AutocompleteSupportFragment();
-
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.TYPES));
-        autocompleteFragment.setCountry("fr");
-        autocompleteFragment.setTypeFilter(TypeFilter.ESTABLISHMENT);
-
-        // Set up a PlaceSelectionListener to handle the response.
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
-                Log.i("TESTAUTO", "Place: " + place.getName() + ", " + place.getId());
-            }
-
-            @Override
-            public void onError(Status status) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                Intent detailActivityIntent = new Intent(this, DetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("detailId", place.getId());
+                detailActivityIntent.putExtras(bundle);
+                startActivity(detailActivityIntent);
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
-                Log.i("TESTAUTO", "An error occurred: " + status);
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Log.i("Error", status.getStatusMessage());
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
             }
-        });
+        }
     }
+
+    private void autocomplete() {
+        // Set the fields to specify which types of place data to
+        // return after the user has made a selection.
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.TYPES);
+
+        // Start the autocomplete intent.
+        Intent intent = new Autocomplete.IntentBuilder(
+                AutocompleteActivityMode.FULLSCREEN, fields)
+                .setTypeFilter(TypeFilter.ESTABLISHMENT)
+                .build(this);
+        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+    }
+
 }

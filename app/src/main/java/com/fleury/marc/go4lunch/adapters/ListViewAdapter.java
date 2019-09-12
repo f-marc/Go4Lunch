@@ -10,16 +10,12 @@ import android.view.ViewGroup;
 import com.fleury.marc.go4lunch.R;
 import com.fleury.marc.go4lunch.api.RestaurantHelper;
 import com.fleury.marc.go4lunch.views.ListViewHolder;
-import com.google.android.libraries.places.api.model.DayOfWeek;
-import com.google.android.libraries.places.api.model.Period;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -82,12 +78,8 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
     public void onBindViewHolder(ListViewHolder viewHolder, int position) {
         final Place place = placesList.get(position);
 
-        Log.i("testHours", "--------------------------------------------------------------");
-
         String name = place.getName();
         String address = place.getAddress();
-        Log.i("testHours", "weekday : " + place.getOpeningHours().getWeekdayText().toString());
-        Log.i("testHours", "periods : " + place.getOpeningHours().getPeriods().toString());
         Double rating = place.getRating();
         PhotoMetadata photo = place.getPhotoMetadatas().get(0);
         double latitude = place.getLatLng().latitude;
@@ -97,8 +89,6 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewHolder> {
         DecimalFormat df = new DecimalFormat("#");
         df.setRoundingMode(RoundingMode.HALF_UP);
         String distance = context.getString(R.string.distance, df.format(result1[0]));
-
-        Log.i("testHours", name);
 
         RestaurantHelper.getRestaurant(place.getId()).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
