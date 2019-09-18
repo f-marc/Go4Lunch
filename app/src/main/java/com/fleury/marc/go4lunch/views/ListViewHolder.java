@@ -82,7 +82,7 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
         }).addOnFailureListener((exception) -> {
             if (exception instanceof ApiException) {
                 ApiException apiException = (ApiException) exception;
-                Log.e("photoBug", "Place not found: " + apiException.getStatusCode());
+                Log.e("ApiException", "Place not found: " + apiException.getStatusCode());
             }
         });
     }
@@ -116,12 +116,8 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
                 filterByDay(periods, DayOfWeek.SUNDAY);
                 break;
         }
-        Log.i("testHours", "LIST : " + periods2);
 
         for (Period p : periods2) {
-            Log.i("testHours", "open : " + p.getOpen().getTime().getHours());
-            Log.i("testHours", "close : " + p.getClose().getTime().getHours());
-            Log.i("testHours", "--------------------------------------------");
             if (p.getClose().getTime().getHours() < hour) {
                 this.itemOpening.setText(R.string.closed);
                 this.itemOpening.setTypeface(null, Typeface.ITALIC);
@@ -133,12 +129,10 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
                     this.itemOpening.setText(R.string.closing_soon);
                     this.itemOpening.setTypeface(null, Typeface.BOLD);
                     this.itemOpening.setTextColor(Color.RED);
-                    //break;
                 }
             } else {
                 this.itemOpening.setText("Open until " + p.getClose().getTime().getHours() + "h" + p.getClose().getTime().getMinutes());
                 this.itemOpening.setTypeface(null, Typeface.ITALIC);
-                //break;
             }
         }
     }

@@ -2,7 +2,6 @@ package com.fleury.marc.go4lunch.controllers.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +30,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void updateUserInfo(View headerView) { // Display user name/mail/image in the Navigation Header
+    public void updateUserInfo(View headerView) { // Display user name, mail & image in the Navigation Header
 
         TextView userName = headerView.findViewById(R.id.nav_header_user_name);
         TextView userMail = headerView.findViewById(R.id.nav_header_user_mail);
@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
             userMail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
         }
 
-        if(!TextUtils.isEmpty(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString())){
+        if (FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() != null){
             Glide.with(this)
                     .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
                     .apply(RequestOptions.circleCropTransform())
@@ -226,27 +226,27 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Place place = Autocomplete.getPlaceFromIntent(data);
-                Intent detailActivityIntent = new Intent(this, DetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("detailId", place.getId());
-                detailActivityIntent.putExtras(bundle);
-                startActivity(detailActivityIntent);
+                if (Objects.requireNonNull(place.getTypes()).contains(Place.Type.RESTAURANT)) {
+                    Intent detailActivityIntent = new Intent(this, DetailActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("detailId", place.getId());
+                    detailActivityIntent.putExtras(bundle);
+                    startActivity(detailActivityIntent);
+                } else {
+                    Toast.makeText(this, R.string.select_restaurant, Toast.LENGTH_SHORT).show();
+                }
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
-                // TODO: Handle the error.
                 Status status = Autocomplete.getStatusFromIntent(data);
-                Log.i("Error", status.getStatusMessage());
+                Log.e("Error", status.getStatusMessage());
             } else if (resultCode == RESULT_CANCELED) {
-                // The user canceled the operation.
+                Log.e("Error", "Canceled");
             }
         }
     }
 
     private void autocomplete() {
-        // Set the fields to specify which types of place data to
-        // return after the user has made a selection.
         List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.TYPES);
 
-        // Start the autocomplete intent.
         Intent intent = new Autocomplete.IntentBuilder(
                 AutocompleteActivityMode.FULLSCREEN, fields)
                 .setTypeFilter(TypeFilter.ESTABLISHMENT)

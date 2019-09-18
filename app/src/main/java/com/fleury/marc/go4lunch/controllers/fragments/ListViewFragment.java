@@ -1,7 +1,5 @@
 package com.fleury.marc.go4lunch.controllers.fragments;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -113,7 +110,6 @@ public class ListViewFragment extends Fragment {
                             placesClient.fetchPlace(request2).addOnSuccessListener((response2) -> {
                                 Place place = response2.getPlace();
                                 placesList.add(place);
-                                Log.i("testDup", "place : " + place);
                                 adapter.setPlaces(placesList);
                             }).addOnFailureListener((exception) -> {
                                 if (exception instanceof ApiException) {
@@ -121,20 +117,17 @@ public class ListViewFragment extends Fragment {
                                     Log.e("placeTest", "Place not found: " + apiException.getStatusCode());
                                 }
                             });
-                        } else {
-                            Log.i("placeTest", "Pas de resto");
                         }
                     }
                 } else {
                     Exception exception = task.getException();
                     if (exception instanceof ApiException) {
                         ApiException apiException = (ApiException) exception;
-                        Log.e("placeTest", "Place not found: " + apiException.getStatusCode());
+                        Log.e("ApiException", "Place not found: " + apiException.getStatusCode());
                     }
                 }
             });
         } else {
-            Log.i("placeTest", "Pas d'autorisation");
             ActivityCompat.requestPermissions(getActivity(), new String[]{ACCESS_FINE_LOCATION}, LOC_REQ_CODE);
         }
     }

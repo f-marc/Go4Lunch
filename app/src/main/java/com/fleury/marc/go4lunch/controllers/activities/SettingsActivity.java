@@ -85,6 +85,7 @@ public class SettingsActivity extends AppCompatActivity {
                 mPreferences.edit().putBoolean("switchCheck", false).apply();
             }
             updateTextView();
+
         });
     }
 

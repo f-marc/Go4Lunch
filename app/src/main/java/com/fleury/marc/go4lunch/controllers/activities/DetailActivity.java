@@ -94,18 +94,14 @@ public class DetailActivity extends AppCompatActivity {
                 detailWebsite = place.getWebsiteUri().toString();
             }
             if (place.getPhotoMetadatas() != null) {
-                Log.i("placeTest", "photo OK");
                 detailPhoto = place.getPhotoMetadatas().get(0);
                 updatePhoto();
-            } else {
-                Log.i("placeTest", "photo PAS OK : " + place.getPhotoMetadatas());
             }
             updateDetail();
         }).addOnFailureListener((exception) -> {
             if (exception instanceof ApiException) {
                 ApiException apiException = (ApiException) exception;
-                // Handle error with given status code.
-                Log.e("placeTest", "Place not found: " + apiException.getStatusCode());
+                Log.e("ApiException", "Place not found: " + apiException.getStatusCode());
             }
         });
 
@@ -120,14 +116,12 @@ public class DetailActivity extends AppCompatActivity {
 
     private void updateCurrentRestaurant() { // Set "restaurant" to the actual value stored in Firebase
         restaurant = "";
-        Log.i("snaptest0", "=" + restaurant);
         UserHelper.getUser(FirebaseAuth.getInstance().getUid()).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     if (document.getData().get("restaurant") != null) {
                         restaurant = document.getData().get("restaurant").toString();
-                        Log.i("snaptest1", "=" + restaurant);
                         updateStar();
                     }
                 } else {
@@ -158,7 +152,7 @@ public class DetailActivity extends AppCompatActivity {
         }).addOnFailureListener((exception) -> {
             if (exception instanceof ApiException) {
                 ApiException apiException = (ApiException) exception;
-                Log.e("photoBug", "Place not found: " + apiException.getStatusCode());
+                Log.e("ApiException", "Place not found: " + apiException.getStatusCode());
             }
         });
     }
@@ -175,20 +169,16 @@ public class DetailActivity extends AppCompatActivity {
 
     private void updateRestaurantLike() {
         // Delete the old restaurant if the user already had one
-        Log.i("snaptest2", "=" + restaurant);
         if (!TextUtils.isEmpty(restaurant)) {
             RestaurantHelper.getRestaurant(restaurant).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        Log.i("snaptest3", "=" + restaurant);
                         DocumentReference docRef = RestaurantHelper.getRestaurantsDocument(restaurant);
                         docRef.update("users", FieldValue.arrayRemove(FirebaseAuth.getInstance().getUid()));
                     }
-                    Log.i("snaptest4", "=" + restaurant);
                 }
             });
-            Log.i("snaptest5", "=" + restaurant);
         }
         // Create or update the restaurant to add the user in it
         RestaurantHelper.getRestaurant(detailId).addOnCompleteListener(task -> {

@@ -1,39 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- MAIN ACTIVITY -->
     <string name="title_Bar">J\'ai Faim !</string>
     <string name="title_map">Carte</string>
     <string name="title_list">Liste</string>
     <string name="title_workmates">Collègues</string>
     <string name="search">Chercher</string>
+    <string name="distance">%sm</string>
+    <string name="yesEating">%1$s mange à %2$s</string>
+    <string name="noEating">%s n\'a pas encore décidé</string>
+    <string name="no_restaurant">Aucun restaurant selectionné</string>
+    <string name="closing_soon">Ferme bientôt</string>
+    <string name="closed">Fermé</string>
+    <string name="open_until">Ouvert jusqu\'à %dh%d</string>
+    <string name="select_restaurant">Veuillez sélectionner un restaurant</string>
+
+    <!-- NAVIGATION DRAWER -->
     <string name="navigation_drawer_open">Ouvrir le menu de navigation</string>
     <string name="navigation_drawer_close">Fermer le menu de navigation</string>
+    <string name="nav_header_desc">En-tête de navigation</string>
     <string name="nav_lunch">VOTRE REPAS</string>
     <string name="nav_settings">PARAMÈTRES</string>
     <string name="nav_logout">DÉCONNEXION</string>
+
+    <!-- LOGIN ACTIVITY -->
     <string name="login">CONNEXION</string>
+
+    <!-- SnackBar -->
     <string name="error_authentication_canceled">Authentification annulée</string>
     <string name="error_no_internet">Erreur : Pas de connexion internet</string>
     <string name="error_unknown_error">Erreur inconnue</string>
+
+    <!-- DETAIL ACTIVITY -->
     <string name="call">APPEL</string>
     <string name="like">AIME</string>
     <string name="liked">J\'AIME</string>
     <string name="unliked">JE N\'AIME PLUS</string>
     <string name="website">SITE WEB</string>
+    <string name="joining">%s a rejoint !</string>
+    <string name="no_phone_number">Aucun numéro de téléphone</string>
+    <string name="no_website">Aucun site internet</string>
+
+    <!-- SETTINGS ACTIVITY -->
     <string name="settings">Paramètres</string>
     <string name="edit">MODIFIER</string>
     <string name="username">Pseudonyme :</string>
     <string name="notifications">Notifications %s</string>
     <string name="on">ON</string>
     <string name="off">OFF</string>
-    <string name="distance">%sm</string>
-    <string name="yesEating">%1$s mange à %2$s</string>
-    <string name="noEating">%s n\'a pas encore décidé</string>
-    <string name="joining">%s a rejoint !</string>
-    <string name="nav_header_desc">En-tête de navigation</string>
-    <string name="no_phone_number">Aucun numéro de téléphone</string>
-    <string name="no_website">Aucun site internet</string>
-    <string name="no_restaurant">Aucun restaurant selectionné</string>
-    <string name="closing_soon">Ferme bientôt</string>
-    <string name="closed">Fermé</string>
-    <string name="open_until">Ouvert jusqu\'à %dh%d</string>
+
 </resources>

@@ -122,11 +122,9 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
 
         // PLACING MARKERS ON THE MAP
         if (ContextCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Log.i("placeTest", "Autorisation OK");
             Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
             placeResponse.addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    Log.i("placeTest", "Task Successful");
                     FindCurrentPlaceResponse response = task.getResult();
                     for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
                         if (placeLikelihood.getPlace().getTypes().contains(Place.Type.RESTAURANT)) {
@@ -150,23 +148,20 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
                                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))).setTag(placeLikelihood);
                                     }
                                 } else {
-                                    Log.d("TaskError", "Error getting documents: ", taskR.getException());
+                                    Log.e("TaskError", "Error getting documents: ", taskR.getException());
                                 }
                             });
-                        } else {
-                            Log.i("placeTest", "Pas de resto");
                         }
                     }
                 } else {
                     Exception exception = task.getException();
                     if (exception instanceof ApiException) {
                         ApiException apiException = (ApiException) exception;
-                        Log.e("placeTest", "Place not found: " + apiException.getStatusCode());
+                        Log.e("ApiException", "Place not found: " + apiException.getStatusCode());
                     }
                 }
             });
         } else {
-            Log.i("placeTest", "Pas d'autorisation");
             ActivityCompat.requestPermissions(getActivity(), new String[]{ACCESS_FINE_LOCATION}, LOC_REQ_CODE);
         }
 
