@@ -169,13 +169,18 @@ public class DetailActivity extends AppCompatActivity {
 
     private void updateRestaurantLike() {
         // Delete the old restaurant if the user already had one
+        Log.i("testresto", "" + restaurant);
         if (!TextUtils.isEmpty(restaurant)) {
             RestaurantHelper.getRestaurant(restaurant).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        DocumentReference docRef = RestaurantHelper.getRestaurantsDocument(restaurant);
-                        docRef.update("users", FieldValue.arrayRemove(FirebaseAuth.getInstance().getUid()));
+                        try {
+                            DocumentReference docRef = RestaurantHelper.getRestaurantsDocument(restaurant);
+                            docRef.update("users", FieldValue.arrayRemove(FirebaseAuth.getInstance().getUid()));
+                        } catch (IllegalArgumentException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             });

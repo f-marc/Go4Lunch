@@ -16,6 +16,8 @@
     <string name="closed">Closed</string>
     <string name="open_until">Open until %dh%d</string>
     <string name="select_restaurant">Please select a restaurant</string>
+    <string name="counter" translatable="false">(%1$d)</string>
+    <string name="openUntil">Open until %1$dh%2$d</string>
 
     <!-- NAVIGATION DRAWER -->
     <string name="navigation_drawer_open">Open navigation drawer</string>

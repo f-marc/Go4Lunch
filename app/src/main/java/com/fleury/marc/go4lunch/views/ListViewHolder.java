@@ -63,14 +63,14 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
         String subAddress = itemAddress.substring(0, itemAddress.indexOf(","));
         this.itemAddress.setText(subAddress);
 
-        getOpening(periods1);
+        this.itemOpening.setText(getOpening(periods1));
 
         double rating = (itemRating / 1.7);
         this.itemRating.setRating((float) rating);
         this.itemDistance.setText(distance);
         if (itemPersons > 0 ) {
             constraintLayout.setVisibility(View.VISIBLE);
-            this.itemPersons.setText("(" + itemPersons + ")");
+            this.itemPersons.setText(String.format(itemView.getResources().getString(R.string.counter), itemPersons));
         }
 
         this.itemPhoto.setImageBitmap(null);
@@ -87,11 +87,13 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    private void getOpening(List<Period> periods) {
+    public String getOpening(List<Period> periods) {
         Calendar calendar = Calendar.getInstance();
         int day = calendar.get(Calendar.DAY_OF_WEEK);
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
+
+        String s = "";
 
         switch (day) {
             case Calendar.MONDAY:
@@ -119,22 +121,23 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
 
         for (Period p : periods2) {
             if (p.getClose().getTime().getHours() < hour) {
-                this.itemOpening.setText(R.string.closed);
+                s = itemView.getResources().getString(R.string.closed);
                 this.itemOpening.setTypeface(null, Typeface.ITALIC);
             } else if (p.getClose().getTime().getHours() - hour == 0) {
                 if (p.getClose().getTime().getMinutes() < minute) {
-                    this.itemOpening.setText(R.string.closed);
+                    s = itemView.getResources().getString(R.string.closed);
                     this.itemOpening.setTypeface(null, Typeface.ITALIC);
                 } else {
-                    this.itemOpening.setText(R.string.closing_soon);
+                    s = itemView.getResources().getString(R.string.closing_soon);
                     this.itemOpening.setTypeface(null, Typeface.BOLD);
                     this.itemOpening.setTextColor(Color.RED);
                 }
             } else {
-                this.itemOpening.setText("Open until " + p.getClose().getTime().getHours() + "h" + p.getClose().getTime().getMinutes());
+                s = String.format(itemView.getResources().getString(R.string.open_until), p.getClose().getTime().getHours(), p.getClose().getTime().getMinutes());
                 this.itemOpening.setTypeface(null, Typeface.ITALIC);
             }
         }
+        return s;
     }
 
     private void filterByDay(List<Period> periods, DayOfWeek day) {

@@ -15,6 +15,7 @@
     <string name="closed">Fermé</string>
     <string name="open_until">Ouvert jusqu\'à %dh%d</string>
     <string name="select_restaurant">Veuillez sélectionner un restaurant</string>
+    <string name="openUntil">Ouvert jusqu\'à %1$dh%2$d</string>
 
     <!-- NAVIGATION DRAWER -->
     <string name="navigation_drawer_open">Ouvrir le menu de navigation</string>
