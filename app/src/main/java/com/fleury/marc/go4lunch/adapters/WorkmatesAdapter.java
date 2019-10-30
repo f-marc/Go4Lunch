@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.RequestManager;
 import com.fleury.marc.go4lunch.R;
 import com.fleury.marc.go4lunch.models.User;
+import com.fleury.marc.go4lunch.utils.SortingList;
 import com.fleury.marc.go4lunch.views.WorkmatesViewHolder;
 
 import java.util.Collections;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesViewHolder> {
 
+    private SortingList sortingList = new SortingList();
     private List<User> usersList;
     private Context context;
     private RequestManager glide;
@@ -28,13 +30,9 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesViewHolder> 
 
     public void setUsers(List<User> usersList) {
         this.usersList = usersList;
-        sortingAlphabetically(usersList);
+        sortingList.sortingAlphabetically(usersList);
         sortingByRestaurant(usersList);
         notifyDataSetChanged();
-    }
-
-    private void sortingAlphabetically(List<User> usersList) {
-        Collections.sort(usersList, (o1, o2) -> o1.getUsername().compareToIgnoreCase(o2.getUsername()));
     }
 
     private void sortingByRestaurant(List<User> usersList) {

@@ -11,9 +11,9 @@ import android.widget.TextView;
 
 import com.fleury.marc.go4lunch.BuildConfig;
 import com.fleury.marc.go4lunch.R;
+import com.fleury.marc.go4lunch.utils.OpeningHours;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.DayOfWeek;
 import com.google.android.libraries.places.api.model.Period;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.net.FetchPhotoRequest;
@@ -22,15 +22,12 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class ListViewHolder extends RecyclerView.ViewHolder {
 
     private static final String apiKey = BuildConfig.GoogleMapsKey;
     private PlacesClient placesClient;
-    private List<Period> periods2 = new ArrayList<>();
 
     private TextView itemName;
     private TextView itemAddress;
@@ -57,13 +54,21 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
         constraintLayout = itemView.findViewById(R.id.item_person_constraint);
     }
 
-    public void updateWithPlace(String itemName, String itemAddress, List<Period> periods1, String distance, int itemPersons, double itemRating, PhotoMetadata itemPhoto){
+    public void updateWithPlace(String itemName, String itemAddress, List<Period> periods, String distance, int itemPersons, double itemRating, PhotoMetadata itemPhoto){
 
         this.itemName.setText(itemName);
         String subAddress = itemAddress.substring(0, itemAddress.indexOf(","));
         this.itemAddress.setText(subAddress);
 
-        this.itemOpening.setText(getOpening(periods1));
+        OpeningHours openingHours = new OpeningHours();
+        String s = openingHours.getOpening(itemView.getResources(), periods);
+        if (s != itemView.getResources().getString(R.string.closing_soon)) {
+            this.itemOpening.setTypeface(null, Typeface.ITALIC);
+        } else {
+            this.itemOpening.setTypeface(null, Typeface.BOLD);
+            this.itemOpening.setTextColor(Color.RED);
+        }
+        this.itemOpening.setText(s);
 
         double rating = (itemRating / 1.7);
         this.itemRating.setRating((float) rating);
@@ -86,66 +91,4 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
             }
         });
     }
-
-    public String getOpening(List<Period> periods) {
-        Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-
-        String s = "";
-
-        switch (day) {
-            case Calendar.MONDAY:
-                filterByDay(periods, DayOfWeek.MONDAY);
-                break;
-            case Calendar.TUESDAY:
-                filterByDay(periods, DayOfWeek.TUESDAY);
-                break;
-            case Calendar.WEDNESDAY:
-                filterByDay(periods, DayOfWeek.WEDNESDAY);
-                break;
-            case Calendar.THURSDAY:
-                filterByDay(periods, DayOfWeek.THURSDAY);
-                break;
-            case Calendar.FRIDAY:
-                filterByDay(periods, DayOfWeek.FRIDAY);
-                break;
-            case Calendar.SATURDAY:
-                filterByDay(periods, DayOfWeek.SATURDAY);
-                break;
-            case Calendar.SUNDAY:
-                filterByDay(periods, DayOfWeek.SUNDAY);
-                break;
-        }
-
-        for (Period p : periods2) {
-            if (p.getClose().getTime().getHours() < hour) {
-                s = itemView.getResources().getString(R.string.closed);
-                this.itemOpening.setTypeface(null, Typeface.ITALIC);
-            } else if (p.getClose().getTime().getHours() - hour == 0) {
-                if (p.getClose().getTime().getMinutes() < minute) {
-                    s = itemView.getResources().getString(R.string.closed);
-                    this.itemOpening.setTypeface(null, Typeface.ITALIC);
-                } else {
-                    s = itemView.getResources().getString(R.string.closing_soon);
-                    this.itemOpening.setTypeface(null, Typeface.BOLD);
-                    this.itemOpening.setTextColor(Color.RED);
-                }
-            } else {
-                s = String.format(itemView.getResources().getString(R.string.open_until), p.getClose().getTime().getHours(), p.getClose().getTime().getMinutes());
-                this.itemOpening.setTypeface(null, Typeface.ITALIC);
-            }
-        }
-        return s;
-    }
-
-    private void filterByDay(List<Period> periods, DayOfWeek day) {
-        for (Period p : periods) {
-            if (p.getOpen().getDay() == day && p.getClose().getDay() == day) {
-                periods2.add(p);
-            }
-        }
-    }
-
 }
